@@ -11,6 +11,9 @@ After copying, set `name`/`id` in `package.json` and `meta.json` to the new slug
 `assets/audio.wav` if there is one.
 
 ## 1. Brief (ask only for what is missing)
+On a client branch, read `clients/<slug>/README.md`, `brand.md` and `profile.md` first: they answer the brand
+questions below (palette, fonts, logo, voice, end card) and list the claims that still need the client's approval.
+Copy the pack's fonts and logo into the project's `assets/`; never edit the originals in `clients/`.
 Client/brand, audience, the ONE message, call to action, length (15-30 s typical), format (default 1080x1920, 30 fps),
 brand assets (logo SVG/PNG, colours, fonts, contact line), tone, and which reference(s) to follow.
 If the user gives a reference link that is not in `refrences/2d-motion-graphics/`, run `analyze-motion-reference` first.

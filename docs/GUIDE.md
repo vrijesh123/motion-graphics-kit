@@ -4,7 +4,8 @@ This kit turns a brief and a voice-over into a finished vertical motion graphics
 **Claude Code** does the work: it writes the script, builds the animation as an HTML page, makes the soundtrack and
 renders the video with **HyperFrames**. You give it references, the brief and feedback.
 
-The guide has seven parts: setup, skills, giving references, making a video, revising, prompts and troubleshooting.
+The guide has eight parts: setup, skills, giving references, clients, making a video, revising, prompts and
+troubleshooting.
 
 ---
 
@@ -28,8 +29,9 @@ Per operating system:
 
 Get the kit:
 ```bash
-git clone --single-branch --branch motion-graphics-setup <repo-url> motion-graphics
+git clone <repo-url> motion-graphics
 cd motion-graphics
+git switch <client>      # optional: a client's branch (part 4); main is the kit on its own
 ```
 
 **Test the whole chain once** by rendering the template. If this works, everything is set up:
@@ -112,7 +114,35 @@ look plus one for a specific move ("use the iris reveal from this one") works we
 
 ---
 
-## 4. Making a video
+## 4. Clients: one branch each
+
+`main` holds the kit (tools, skills, template, references). Each client gets its own branch named after it, for
+example `wolfx`, holding two things the kit doesn't have:
+- `clients/<client>/`, the **client pack**: what the company does, its palette, fonts, logo, tone of voice, proof
+  points, video ideas and what still needs the client's approval, with a source for every fact.
+- `projects/<client>-<video>/`, the client's videos.
+
+On a client branch, Claude reads the pack before writing anything, so you don't have to repeat the brand in every
+brief.
+
+**New client:**
+```bash
+git switch main
+git switch -c acme                      # branch name = client slug
+cp -r clients/_template clients/acme
+```
+> Research Acme (acme.com) and fill in `clients/acme/`. List what they need to confirm.
+
+**Kit updates** (a better tool, a new reference) are made on `main`, then pulled into each client branch with
+`git switch acme && git merge main`. Never merge a client branch into `main` or into another client's branch;
+see `clients/README.md` for the full rules.
+
+**Public repository:** pushing a client branch publishes that client's pack and scripts. Keep client branches on
+your machine or push them to a private remote.
+
+---
+
+## 5. Making a video
 
 Open Claude Code in the kit folder (`claude`) and give it a brief. A good first message:
 
@@ -137,14 +167,15 @@ What happens next (the `make-motion-video` skill):
 **Preview it yourself while it's being built:** in the project folder, run `npx hyperframes preview` and open the
 link. It shows a scrubbable timeline of the live HTML.
 
-**Brand assets** go in `projects/<name>/assets/`. Logo as SVG is best, PNG with transparency is fine. Fonts as
-.ttf/.otf/.woff2 if they're not on Google Fonts. Voice-over, audio and video files there are git-ignored
-automatically, but logos, scripts and `index.html` are not. If this repository is public, do client work in a
-private copy (for example a private fork, or a local clone you never push).
+**Brand assets** live in the client pack (`clients/<client>/assets/`) and are copied into
+`projects/<name>/assets/` for each video. Logo as SVG is best, PNG with transparency is fine. Fonts as
+.ttf/.otf/.woff2 if they're not on Google Fonts. Voice-over, audio and video files in projects are git-ignored
+automatically, but logos, scripts and `index.html` are not. If this repository is public, keep client branches
+local or on a private remote (part 4).
 
 ---
 
-## 5. Revising
+## 6. Revising
 
 Give feedback in plain words and be specific about time and scene:
 > v1 feedback: the hook word at 0:01 is gone too fast; scene 3 is too busy, keep only the shield;
@@ -155,7 +186,7 @@ checks and renders **v2** next to v1. Earlier versions are never overwritten.
 
 ---
 
-## 6. Prompt cheat sheet
+## 7. Prompt cheat sheet
 
 | You want | Say |
 |---|---|
@@ -170,7 +201,7 @@ checks and renders **v2** next to v1. Earlier versions are never overwritten.
 
 ---
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 | Problem | Fix |
 |---|---|
@@ -194,6 +225,9 @@ docs/GUIDE.md                  this guide
 docs/MEDIA.md                  list of git-ignored media (re-run: python tools/media_manifest.py)
 .claude/skills/                project skills (motion-graphics-2d, analyze-motion-reference, make-motion-video)
 refrences/2d-motion-graphics/  analysed references (SUMMARY.md first)
+clients/README.md              how client branches work
+clients/_template/             blank client pack (copied to clients/<client>/ on a client's branch)
+clients/<client>/              the client pack, on that client's branch only
 projects/_template/            starter project: index.html, cues.json, fonts, grain
 projects/<client>-<slug>/      one folder per video
 tools/                         transcribe, caption_spans, make_audio, prep_reference, seek_snapshot, media_manifest

@@ -9,7 +9,22 @@ and HyperFrames (HTML + GSAP rendered to MP4). Human guide: `docs/GUIDE.md`. Med
   (The folder name `refrences` is spelled this way on purpose; keep it.)
 - `projects/_template/` starter HyperFrames project in the house style. Copy it for every new video: `projects/<client>-<slug>/`.
 - `projects/<name>/` one folder per video: `index.html`, `cues.json`, `script.md`, `assets/`.
+- `clients/` one brand pack per client, on that client's branch only (see "Clients and branches").
+  `clients/_template/` is the blank pack.
 - `tools/` shared scripts (see below). `outputs/` finished renders (git-ignored). `docs/` guide + media manifest.
+
+## Clients and branches
+- `main` is the kit. Each client has its own branch, named after its slug (`git branch --show-current`), with its
+  pack in `clients/<slug>/` and its videos in `projects/<slug>-<video>/`. Details: `clients/README.md`.
+- On a client branch, read `clients/<slug>/README.md` before any brief, script or build. Its palette, fonts, logo,
+  voice and end card replace the template defaults; ask only for what it does not answer.
+- On a client branch change only `clients/<slug>/` and `projects/<slug>-*/`. Kit changes (tools, skills,
+  template, references, docs) are made on `main` and brought in with `git merge main`. Never merge a client branch
+  into `main` or into another client's branch.
+- Every fact in a pack cites its source in `sources.md`. Numbers, client names, testimonials and contact
+  details stay marked "confirm" until the client approves them, and are not put on screen before that.
+- Keep client facts in the pack, not in Claude's memory (memory is shared across branches).
+- Pushing a client branch to a public remote publishes the client's material: ask first.
 
 ## Skills
 - Project skills in `.claude/skills/` (load automatically): `motion-graphics-2d` (craft, formats, principles, checklist),
