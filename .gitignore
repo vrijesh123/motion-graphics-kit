@@ -1,0 +1,33 @@
+# Heavy and third-party media stays OUT of git (git keeps every binary version forever, and the repo may be public).
+# Everything ignored here is listed in docs/MEDIA.md (size, duration, sha256): python tools/media_manifest.py
+
+# --- finished renders / deliverables (share via Drive or similar) ---
+outputs/*
+!outputs/.gitkeep
+projects/*/renders/
+
+# --- client material inside projects (voice-overs, logos, footage): keep locally, list in MEDIA.md ---
+projects/*/assets/*.mp3
+projects/*/assets/*.wav
+projects/*/assets/*.m4a
+projects/*/assets/*.mp4
+projects/*/assets/*.mov
+*.tmp.wav
+
+# --- third-party reference videos and temporary analysis frames ---
+refrences/**/*.mp4
+refrences/**/*.webm
+refrences/**/*.info.json
+refrences/**/frames/
+refrences/**/sheets/
+
+# --- HyperFrames local state, snapshots, check reports ---
+**/.hyperframes/
+
+# --- tooling noise ---
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini
