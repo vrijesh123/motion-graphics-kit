@@ -9,7 +9,7 @@ Researched 2026-11-16.
 - **Base:** Mumbai, India, offering "on-site and remote digital solutions" [S8]. Clients include a Dubai-based
   company and an exporter selling in India and the Middle East [S4].
 - **Founded:** 2019 by Ruchit Kharwa and Vrijesh Rathod [S7]. Both appear as leadership on the About page [S2].
-  Ruchit Kharwa is introduced as "CEO & CTO of WOLFx Digital Agency" in a 2026 Instagram event post [S12].
+  Ruchit Kharwa is introduced as "CEO & CTO of WOLFx Digital Agency" in an Instagram event post [S12].
 - **Team:** 10-49 people [S7]. The About page says WOLFx "is run by young professionals" [S2].
 
 ## Positioning (their words)
@@ -36,11 +36,11 @@ Researched 2026-11-16.
 |---|---|
 | UI UX CX Design | UI design, user interviews, research, usability testing, omni-channel experience, UI/UX audits, motion graphics and micro-interactions |
 | Website Development | Custom web, e-commerce, CMS, SaaS, ERP, front-end, back-end |
-| Mobile App Development | iOS, Android, cross-platform, app UI/UX |
+| Mobile App Development | iOS, Android, cross-platform, app UI/UX design, app maintenance |
 | Digital Marketing | SEO, PPC, social media, content, email; weekly/monthly reporting |
-| Cloud Solutions | Cloud, DevOps, serverless (AWS, Azure, DigitalOcean, Vultr) |
-| AI & Machine Learning | Predictive models, NLP, computer vision, chatbots, process automation |
-| Blockchain | Custom chains, smart contracts, dApps, tokenisation |
+| Cloud Solutions | Cloud migration, DevOps & CI/CD, cloud security, serverless architecture, cloud management (AWS, Azure, DigitalOcean, Vultr) |
+| AI & Machine Learning | Predictive analytics, NLP, computer vision, chatbots & virtual assistants, process automation |
+| Blockchain | Custom blockchain development, smart contracts, dApps, tokenisation & NFTs, blockchain consulting |
 
 The social banner adds Game Development, Cyber Security, AR/VR and ERP [S11]. The FAQ says the list is "not a
 limitation", and they also take on embedded and IoT work [S3].

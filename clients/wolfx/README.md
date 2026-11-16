@@ -49,12 +49,17 @@ cp clients/wolfx/assets/logo/wolfx-wordmark-*-interim.png projects/wolfx-<video>
 In the project's `index.html`:
 1. Replace the `:root` line and the two template `@font-face` lines with the blocks from `brand.md`.
 2. Set `#root` to Poppins.
-3. Drop the italic-serif `.key` style. If it stays, `npm run check` fails with "font family used without
-   @font-face".
+3. Remove the italic serif from **both** rules that use it, `.key` and `#end .tag`, and set them in Poppins
+   (700-800) instead. If either keeps `InstrumentSerifItalic`, `npm run check` fails with "font family used
+   without @font-face".
 4. On the end card, replace the `LOGO` tile and the `.brand` text with the wordmark `<img>`. Also delete
    `"#end .brand"` from the script's `splitChars` list and its `warp(...)` line, or the page throws an error.
+5. In Poppins, "Let's make something great together." wraps to two lines at about 64 px. Move `#end .contact`
+   down (1270 px → about 1340 px), or it overlaps the closing line.
 
-These steps were tested on 2026-11-16: the template with this pack passed `npm run check` with 0 errors.
+Tested 2026-11-16 on a scratch copy of the template with steps 1-5 applied, plus `npm run audio`: `npm run check`
+passed with 0 errors. The two remaining contrast warnings are the template's decorative ghost word and a
+mid-animation frame.
 
 Then follow `make-motion-video`: the script comes first, for approval.
 
