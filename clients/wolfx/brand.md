@@ -58,8 +58,9 @@ buttons.
   "in seconds." line nearly filled the 1080 px frame, and a 64 px end-card line wrapped to two lines. Expect to
   shrink the template's big key-word sizes by roughly 10-15%, and re-check layout after any copy change.
 - **The wordmark is not Poppins.** It is a tall condensed face, and we have not identified it. Treat it as
-  artwork: always use the logo file, never retype "WOLFx" in a font. Ask WOLFx for the typeface before using
-  condensed headlines.
+  artwork: wherever the logo appears (plate badge, end card), use the logo file and never imitate it with a font.
+  In running captions and VO text, the name is ordinary Poppins text spelled `WOLFx`, so each caption word can be
+  timed like any other. Ask WOLFx for the typeface before using condensed headlines.
 - **Casing:** WOLFx's site headings use Title Case ("Our Featured Work"). The kit's default for captions is
   sentence case. Confirm which WOLFx wants (open question in `README.md`).
 
