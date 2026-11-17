@@ -62,8 +62,91 @@
     - sentence case or Title Case;
     - the interim PNG wordmark (we need an SVG);
     - wolfx.io as the only contact.
+- 2026-11-17: **The user asked for an ElevenLabs voice-over script** (below) and will generate the MP3 themselves.
+  When it arrives:
+  - Copy it to `assets/vo.mp3` and transcribe it with `tools/transcribe.py`. Fix "WOLFx" in the transcript.
+  - Move the word `data-t` times and the cuts to the voice's pauses.
+  - Set `"vo"` in `cues.json` and re-run `npm run audio`.
+  - Render as v2; v1 stays.
+- 2026-11-17: **User feedback on v1:** they added the voice-over (`voiceovers/ElevenLabs_…Bella…v4.mp3`, 19.96 s)
+  and asked for it to be synced. They also reported "broken" text in S7 (screenshot at about 16.3 s) and asked for
+  v1 to be checked for other mistakes.
+  - **What was wrong in v1:**
+    1. **S7 placeholders.** Each grey dashed box had a snap pulse written as a `fromTo` from scale 1.05. GSAP
+       applies a `fromTo`'s start values when the timeline is built, and these scaled from the top-left corner, so
+       every box was 5% too big before its snap and spilled past the browser and phone frames.
+    2. **Key-line word spacing.** Poppins 800 with −0.04em tracking left only about 0.11em between words, so lines
+       read as "designand", "buildit,", "don’tfail" and "theproblem.".
+  - **Fixes:**
+    - The pulse is now a keyframed `to()`, so the boxes rest at scale 1.
+    - Key lines get `word-spacing: 0.15em` (about 0.26em between words) and `line-height: 1.02`. The end line gets
+      `word-spacing: 0.06em`.
+    - The iris origin moved to (940, 584) to follow the full stop.
+  - **v2 timing comes from the voice-over:**
+    - The voice-over is copied to `assets/vo.mp3` and placed at +0.2 s (measured in the final mix: +0.200).
+    - Whisper word times are in `assets/vo_words.json`, with "WolfX" corrected to WOLFx. Each word's `data-t` is
+      its start + 0.2.
+    - Cuts sit in the voice's pauses: 2.0, 3.62, 6.6, 9.3, 10.95, 12.8, 15.35 and 18.0. The video is 23 s long
+      (voice ends 20.16 s, plus the end-card hold).
+    - The S1→S2 cut is mid-sentence ("don’t fail | because"), because the voice doesn't pause there.
+    - The pills land on their spoken words (16.44, 17.22). "Websites" starts at 15.3, so it is on screen at the
+      15.35 cut, ahead of the spoken word at 15.62.
+    - The S8 → end-card set-piece runs from 17.66 to 18.0, in the 17.7–18.3 pause.
+    - The closing line builds from 18.24 to 19.4 and holds to 23.0; the wolfx.io button comes in at 19.95.
+    - Sound effects are quieter under the voice, with three short knot swells. The music bed ducks under the voice.
+  - **Voice clarity (measured by fitting the voice against the mix, not listened to):**
+    - The first v2 mix had the closing line only 3.6 dB above the impact, chime and riser.
+    - The impact (0.4), chime (0.3, 1.2 s) and riser (0.5, 0.6 s) were lowered, along with the cut and strike at
+      2.0–2.95. The closing line now sits 10.4 dB above the rest; the other phrases 11–17 dB.
+    - "because of bad code." is 8.8 dB above the music's bass and kick, which all sit below 1 kHz. In 1–4 kHz the
+      rest is 22–30 dB down, so the voice stays clear.
+  - **S2:** the code rows behind "because of / bad code." fade out, so the caption sits on white.
+  - **Render:** `outputs/wolfx-clarity-promo-v2-23s.mp4`. `npm run check`: 0 errors; craft and layout show no
+    findings.
+  - **Still tight, if a v3 is wanted:** the voice moves on quickly.
+    - "don’t fail" is fully on screen only from 1.72 to 1.82 s before the push into the code window.
+    - "with you," and "business needs," hold for about 0.25–0.6 s.
+    - That's fine with sound, short with the sound off.
+  - **On purpose:** "Most tech projects" is on screen from frame 0 for the thumbnail, slightly ahead of the voice
+    (spoken 0.2–1.2 s).
+  - **Repo note:** `voiceovers/` is not git-ignored (only `projects/*/assets/*.mp3` is), so committing would add
+    the original MP3. The fix belongs in `.gitignore` on `main`.
 
 ---
+
+## Voice-over for ElevenLabs (2026-11-17)
+Approved Draft 1 text, 53 words, with WOLFx spelled phonetically. The pauses sit at the scene changes: the
+turn into scene 4, and the beat before the end card. Commas carry the rest. Aim for a read of about 22 s
+(2.4–2.5 words/s), so the closing line holds for about 2.5 s on the end card.
+
+```text
+Most tech projects don't fail because of bad code. <break time="0.5s" />
+They fail because nobody was clear on the problem. <break time="0.8s" />
+At Wolf-ex, we start with clarity. <break time="0.4s" />
+We sit down with you, map out what your business needs, and only then design and build it, from websites and apps to A.I. <break time="0.6s" />
+Let's make something great together.
+```
+
+Plain version, for models that don't support break tags (the line breaks and full stops carry the pauses):
+
+```text
+Most tech projects don't fail because of bad code.
+
+They fail because nobody was clear on the problem.
+
+At Wolf-ex, we start with clarity.
+
+We sit down with you, map out what your business needs, and only then design and build it, from websites and apps to A.I.
+
+Let's make something great together.
+```
+
+- **Delivery:** warm and confident, like a founder talking, not an announcer. Keep the voice settings neutral:
+  middle stability, low style exaggeration, speed 1.0.
+- **Voice:** WOLFx still has to choose. Indian English suits a Mumbai company with clients in India and the
+  Middle East; a neutral international voice also works.
+- **If the read runs past about 23 s,** switch to hook B ("Good software doesn't begin with code. It begins with
+  understanding the problem.") rather than speeding the voice up.
 
 ## Draft 2 (approved copy, text-only timing)
 Same copy and visuals as Draft 1. The words build on the music instead of a voice: lead-in words arrive about

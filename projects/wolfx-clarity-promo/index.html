@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=1080, height=1920" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
     <!--
-      WOLFx "Clarity first" promo, 1080x1920, 30 fps, 25 s. Text-only (no voice-over), timed to a 120 bpm grid
-      (beat 0.5 s, bar 2 s). Copy and shot list: script.md (Draft 2). Brand: clients/wolfx/brand.md.
-      Scene starts = "cut" cues in cues.json: 0, 2, 4, 8, 10.5, 12.5, 15, 17.5, 20.
-      Word data-t = the second the word starts to land. Red (#FF2B2B) is used once per scene at most.
+      WOLFx "Clarity first" promo, 1080x1920, 30 fps, 23 s. v2: timed to the ElevenLabs voice-over (assets/vo.mp3 at
+      +0.2 s; words in assets/vo_words.json). Copy and shot list: script.md (Draft 2). Brand: clients/wolfx/brand.md.
+      Scene starts = "cut" cues in cues.json: 0, 2, 3.62, 6.6, 9.3, 10.95, 12.8, 15.35, 18.
+      Word data-t = Whisper word start + 0.2 (the second it is spoken). Red (#FF2B2B) is used once per scene at most.
     -->
     <style>
       @font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-Regular.ttf") format("truetype"); font-weight: 400; font-display: block; }
@@ -28,7 +28,7 @@
       /* captions: small lead-in line over one big key line */
       .capbox { position: absolute; left: 60px; right: 60px; text-align: center; }
       .lead { font-size: 64px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.12; }
-      .keyb { font-size: 132px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.0; margin-top: 6px; }
+      .keyb { font-size: 132px; font-weight: 800; letter-spacing: -0.04em; word-spacing: 0.15em; line-height: 1.02; margin-top: 6px; }
       .w { display: inline-block; white-space: nowrap; }
       .red { color: var(--accent); }
       .mk { position: relative; display: inline-block; white-space: nowrap; }
@@ -57,107 +57,107 @@
       /* end card */
       #end .wm { position: absolute; left: 260px; top: 470px; width: 560px; height: 350px; }
       #end .brule { position: absolute; left: 440px; top: 872px; width: 200px; height: 6px; background: var(--accent); transform-origin: 50% 50%; }
-      #end .tag { position: absolute; left: 60px; right: 60px; top: 922px; text-align: center; font-size: 76px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.12; }
+      #end .tag { position: absolute; left: 60px; right: 60px; top: 922px; text-align: center; font-size: 76px; font-weight: 700; letter-spacing: -0.025em; word-spacing: 0.06em; line-height: 1.12; }
       #end .btn { position: absolute; left: 330px; top: 1172px; width: 420px; height: 112px; background: var(--ink); color: var(--bg); display: flex; align-items: center; justify-content: center; gap: 24px; font-size: 48px; font-weight: 600; letter-spacing: -0.01em; }
       #end .btn svg { width: 46px; height: 30px; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="23" data-width="1080" data-height="1920">
 
-      <!-- S1 0-2: "Most tech projects / don't fail" over a browser window typing code (out: push in on the window) -->
-      <section id="s1" class="clip" data-start="0" data-duration="2.1" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S1 0-2.0: "Most tech projects / don't fail" over a browser window typing code (out: push in on the window) -->
+      <section id="s1" class="clip" data-start="0" data-duration="2.05" data-track-index="0"><div class="stage"><div class="cam">
         <div class="capbox" style="top:340px">
           <div class="lead"><span class="w" data-t="0">Most</span> <span class="w" data-t="0">tech</span> <span class="w" data-t="0">projects</span></div>
-          <div class="keyb"><span class="w" data-t="0.85">don’t</span> <span class="w" data-t="1">fail</span></div>
+          <div class="keyb"><span class="w" data-t="1.22">don’t</span> <span class="w" data-t="1.58">fail</span></div>
         </div>
         <svg class="win" viewBox="0 0 780 600" style="position:absolute; left:150px; top:640px; width:780px; height:600px"></svg>
       </div></div></section>
 
-      <!-- S2 2-4: "because of / bad code." + red strike-through at 3.0 (out: dip, hard cut to black) -->
-      <section id="s2" class="clip" data-start="2" data-duration="2" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S2 2.0-3.62: "because of / bad code." + red strike-through at 2.95 (out: dip, hard cut to black) -->
+      <section id="s2" class="clip" data-start="2" data-duration="1.62" data-track-index="0"><div class="stage"><div class="cam">
         <svg class="win" viewBox="0 0 780 600" data-layout-allow-overflow style="position:absolute; left:-396px; top:220px; width:1872px; height:1440px"></svg>
         <div class="capbox" style="top:780px" data-layout-allow-overlap>
-          <div class="lead"><span class="w" data-t="2.15">because</span> <span class="w" data-t="2.32">of</span></div>
-          <div class="keyb"><span class="mk"><span class="w" data-t="2.5">bad</span> <span class="w" data-t="2.65">code.</span><span class="strike"></span></span></div>
+          <div class="lead"><span class="w" data-t="2.02">because</span> <span class="w" data-t="2.26">of</span></div>
+          <div class="keyb"><span class="mk"><span class="w" data-t="2.42">bad</span> <span class="w" data-t="2.68">code.</span><span class="strike"></span></span></div>
         </div>
         <div class="dip"></div>
       </div></div></section>
 
-      <!-- S3 4-8 (black): "They fail because nobody was clear on / the problem." A white line tangles into a knot.
-           Set-piece at 8.0: the knot pulls straight, then a white iris opens from the full stop (scene 4) -->
-      <section id="s3" class="clip" data-start="4" data-duration="4.6" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S3 3.62-6.6 (black): "They fail because nobody was clear on / the problem." A white line tangles into a knot.
+           Set-piece at 6.6: the knot pulls straight, then a white iris opens from the full stop (scene 4) -->
+      <section id="s3" class="clip" data-start="3.62" data-duration="3.5" data-track-index="0"><div class="stage"><div class="cam">
         <svg class="full" viewBox="0 0 1080 1920" data-layout-allow-overflow><path id="knot" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="butt" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>
         <div class="capbox" style="top:330px">
-          <div class="lead"><span class="w" data-t="4.2">They</span> <span class="w" data-t="4.38">fail</span> <span class="w" data-t="4.56">because</span> <span class="w" data-t="4.78">nobody</span> <span class="w" data-t="4.98">was</span> <span class="w" data-t="5.16">clear</span> <span class="w" data-t="5.34">on</span></div>
-          <div class="keyb red"><span class="w" data-t="5.85">the</span> <span class="w" data-t="6">problem.</span></div>
+          <div class="lead"><span class="w" data-t="3.7">They</span> <span class="w" data-t="3.8">fail</span> <span class="w" data-t="4.2">because</span> <span class="w" data-t="4.48">nobody</span> <span class="w" data-t="4.84">was</span> <span class="w" data-t="5.14">clear</span> <span class="w" data-t="5.48">on</span></div>
+          <div class="keyb red"><span class="w" data-t="5.72">the</span> <span class="w" data-t="5.82">problem.</span></div>
         </div>
       </div></div></section>
 
-      <!-- S4 8-10.5: "At WOLFx, we start with / clarity." The straight line is a calm horizon (out: slide left) -->
-      <section id="s4" class="clip" data-start="8" data-duration="2.9" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S4 6.6-9.3: "At WOLFx, we start with / clarity." The straight line is a calm horizon (out: slide left) -->
+      <section id="s4" class="clip" data-start="6.6" data-duration="3.1" data-track-index="0"><div class="stage"><div class="cam">
         <svg class="full" viewBox="0 0 1080 1920" data-layout-allow-overflow>
           <line x1="-40" y1="1080" x2="1120" y2="1080" stroke="#121212" stroke-width="4"/>
           <g class="ticks"></g>
         </svg>
         <div class="capbox" style="top:640px">
-          <div class="lead"><span class="w" data-t="8.3">At</span> <span class="w" data-t="8.46">WOLFx,</span> <span class="w" data-t="8.62">we</span> <span class="w" data-t="8.78">start</span> <span class="w" data-t="8.94">with</span></div>
-          <div class="keyb red"><span class="w" data-t="9.5">clarity.</span></div>
+          <div class="lead"><span class="w" data-t="6.92">At</span> <span class="w" data-t="7.02">WOLFx,</span> <span class="w" data-t="7.86">we</span> <span class="w" data-t="8.08">start</span> <span class="w" data-t="8.34">with</span></div>
+          <div class="keyb red"><span class="w" data-t="8.56">clarity.</span></div>
         </div>
       </div></div></section>
 
-      <!-- S5 10.5-12.5: "We sit down / with you," two speech bubbles take turns either side of the line (out: zoom through) -->
-      <section id="s5" class="clip" data-start="10.5" data-duration="2" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S5 9.3-10.95: "We sit down / with you," two speech bubbles take turns either side of the line (out: zoom through) -->
+      <section id="s5" class="clip" data-start="9.3" data-duration="1.65" data-track-index="0"><div class="stage"><div class="cam">
         <svg class="full bubbles" viewBox="0 0 1080 1920" data-layout-allow-overflow>
           <line x1="-40" y1="1080" x2="1120" y2="1080" stroke="#121212" stroke-width="4"/>
         </svg>
         <div class="capbox" style="top:400px">
-          <div class="lead"><span class="w" data-t="10.7">We</span> <span class="w" data-t="10.86">sit</span> <span class="w" data-t="11">down</span></div>
-          <div class="keyb"><span class="w" data-t="11.3">with</span> <span class="w" data-t="11.5">you,</span></div>
+          <div class="lead"><span class="w" data-t="9.64">We</span> <span class="w" data-t="9.74">sit</span> <span class="w" data-t="9.94">down</span></div>
+          <div class="keyb"><span class="w" data-t="10.2">with</span> <span class="w" data-t="10.4">you,</span></div>
         </div>
       </div></div></section>
 
-      <!-- S6 12.5-15: "map out what your / business needs," a dashed route crosses a contour map to a red pin (out: push up) -->
-      <section id="s6" class="clip" data-start="12.5" data-duration="2.5" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S6 10.95-12.8: "map out what your / business needs," a dashed route crosses a contour map to a red pin (out: push up) -->
+      <section id="s6" class="clip" data-start="10.95" data-duration="1.85" data-track-index="0"><div class="stage"><div class="cam">
         <svg class="full topo" viewBox="0 0 1080 1920" data-layout-allow-overflow></svg>
         <div class="capbox" style="top:330px">
-          <div class="lead"><span class="w" data-t="12.65">map</span> <span class="w" data-t="12.8">out</span> <span class="w" data-t="12.95">what</span> <span class="w" data-t="13.1">your</span></div>
-          <div class="keyb"><span class="w" data-t="13.35">business</span> <span class="w" data-t="13.5">needs,</span></div>
+          <div class="lead"><span class="w" data-t="10.98">map</span> <span class="w" data-t="11.2">out</span> <span class="w" data-t="11.44">what</span> <span class="w" data-t="11.58">your</span></div>
+          <div class="keyb"><span class="w" data-t="11.72">business</span> <span class="w" data-t="12">needs,</span></div>
         </div>
       </div></div></section>
 
-      <!-- S7 15-17.5: "and only then / design and build it," placeholders snap into solid UI blocks (out: hard cut) -->
-      <section id="s7" class="clip" data-start="15" data-duration="2.5" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S7 12.8-15.35: "and only then / design and build it," placeholders snap into solid UI blocks (out: hard cut) -->
+      <section id="s7" class="clip" data-start="12.8" data-duration="2.55" data-track-index="0"><div class="stage"><div class="cam">
         <svg class="full wire" viewBox="0 0 1080 1920" data-layout-allow-overflow></svg>
         <div class="capbox" style="top:330px">
-          <div class="lead"><span class="w" data-t="15.2">and</span> <span class="w" data-t="15.36">only</span> <span class="w" data-t="15.52">then</span></div>
-          <div class="keyb"><span class="w" data-t="15.8">design</span> <span class="w" data-t="15.92">and</span> <span class="w" data-t="16">build</span> <span class="w" data-t="16.12">it,</span></div>
+          <div class="lead"><span class="w" data-t="12.82">and</span> <span class="w" data-t="12.96">only</span> <span class="w" data-t="13.32">then</span></div>
+          <div class="keyb"><span class="w" data-t="13.68">design</span> <span class="w" data-t="14.18">and</span> <span class="w" data-t="14.56">build</span> <span class="w" data-t="14.86">it,</span></div>
         </div>
       </div></div></section>
 
-      <!-- S8 17.5-20: three red-outlined service pills on the beats (out: set-piece, pills fly to centre) -->
-      <section id="s8" class="clip" data-start="17.5" data-duration="2.55" data-track-index="0"><div class="stage"><div class="cam">
+      <!-- S8 15.35-18.0: three red-outlined service pills on their spoken words (out: set-piece, pills fly to centre) -->
+      <section id="s8" class="clip" data-start="15.35" data-duration="2.7" data-track-index="0"><div class="stage"><div class="cam">
         <div class="pill p0" style="left:237px; top:596px; width:606px"><svg width="606" height="168"><rect x="2.5" y="2.5" width="601" height="163" rx="81.5" fill="none" stroke="#FF2B2B" stroke-width="5" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><span>Websites</span></div>
         <div class="pill p1" style="left:335px; top:836px; width:410px"><svg width="410" height="168"><rect x="2.5" y="2.5" width="405" height="163" rx="81.5" fill="none" stroke="#FF2B2B" stroke-width="5" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><span>Apps</span></div>
         <div class="pill p2" style="left:400px; top:1076px; width:280px"><svg width="280" height="168"><rect x="2.5" y="2.5" width="275" height="163" rx="81.5" fill="none" stroke="#FF2B2B" stroke-width="5" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><span>AI</span></div>
       </div></div></section>
 
-      <!-- END 20-25: wordmark, red rule, closing line, wolfx.io button. Held to the end -->
-      <section id="end" class="clip" data-start="20" data-duration="5" data-track-index="0"><div class="stage">
+      <!-- END 18-23: wordmark, red rule, closing line, wolfx.io button. Held to the end -->
+      <section id="end" class="clip" data-start="18" data-duration="5" data-track-index="0"><div class="stage">
         <img class="wm" src="assets/wolfx-wordmark-black-interim.png" alt="WOLFx" />
         <div class="brule"></div>
-        <div class="tag"><span class="w" data-t="20.55">Let’s</span> <span class="w" data-t="20.7">make</span> <span class="w" data-t="20.85">something</span> <span class="w" data-t="21.05">great</span> <span class="w" data-t="21.25">together.</span></div>
+        <div class="tag"><span class="w" data-t="18.24">Let’s</span> <span class="w" data-t="18.54">make</span> <span class="w" data-t="18.66">something</span> <span class="w" data-t="18.98">great</span> <span class="w" data-t="19.4">together.</span></div>
         <div class="btn"><span>wolfx.io</span><svg viewBox="0 0 46 30"><path class="arr" d="M2 15 H40 M28 3 L41 15 L28 27" fill="none" stroke="#FFFFFF" stroke-width="4"/></svg></div>
       </div></section>
 
       <!-- persistent plate: faint grid, contour lines drifting in the bottom-right corner, "Wx" badge top centre -->
-      <div id="plate" class="clip" data-start="0" data-duration="25" data-track-index="2">
+      <div id="plate" class="clip" data-start="0" data-duration="23" data-track-index="2">
         <svg class="full grid" viewBox="0 0 1080 1920" data-layout-allow-overflow></svg>
         <svg class="full topo" viewBox="0 0 1080 1920" data-layout-allow-overflow></svg>
         <div id="badge" class="badge"><img src="assets/wolfx-monogram-wx.png" alt="" /></div>
       </div>
       <!-- soundtrack from tools/make_audio.py (reads cues.json); run npm run audio after any timing change -->
-      <audio id="mix" src="assets/audio.wav" data-start="0" data-duration="25" data-volume="1" data-track-index="1"></audio>
+      <audio id="mix" src="assets/audio.wav" data-start="0" data-duration="23" data-volume="1" data-track-index="1"></audio>
     </div>
 
     <script>
@@ -290,6 +290,8 @@
       })();
 
       // ---------- timeline ----------
+      // v2: timed to the voice-over (assets/vo.mp3, placed at +0.2 s). Word data-t = Whisper word start + 0.2.
+      // Scene changes sit in the VO's pauses and equal the "cut" cues in cues.json: 2.0, 3.62, 6.6, 9.3, 10.95, 12.8, 15.35, 18.0.
       const tl = gsap.timeline({ paused: true });
       // draw-on: tween the attribute, not the CSS property (CSSPlugin rounds px, which turns a 0..1 offset into a jump)
       const draw = (el, t, dur, ease = "power2.inOut") => tl.fromTo(el, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: dur, ease }, t);
@@ -301,7 +303,7 @@
         tl.fromTo(w, { opacity: 0, y: 10, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.14, ease: "power3.out" }, t);
       });
 
-      // ---- S1 0-2: code types in, one row at a time; cursor follows, then blinks ----
+      // ---- S1 0-2.0: code types in, one row at a time; cursor follows, then blinks ----
       const s1 = q("#s1 .win"), cur1 = s1.querySelector(".cursor");
       tl.set(cur1, { attr: { x: rowEnd[2][0], y: rowEnd[2][1] } }, 0);
       for (let k = 3; k < ROWS.length; k++) {
@@ -310,95 +312,99 @@
         segs.forEach((seg, j) => tl.fromTo(seg, { scaleX: 0 }, { scaleX: 1, transformOrigin: "0% 50%", duration: 0.1, ease: "steps(4)" }, t + j * 0.07));
         tl.set(cur1, { attr: { x: rowEnd[k][0], y: rowEnd[k][1] } }, t + Math.max(0, segs.length - 1) * 0.07 + 0.1);
       }
-      tl.fromTo(cur1, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "steps(1)", yoyo: true, repeat: 1 }, 1.62);
-      // out: push in on the window (accelerates into the cut at 2.0)
-      tl.fromTo("#s1 .stage", { scale: 1, filter: "blur(0px)" }, { scale: 2.6, filter: "blur(10px)", duration: 0.2, ease: "power3.in" }, 1.8);
+      tl.fromTo(cur1, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "steps(1)", yoyo: true, repeat: 1 }, 1.6);
+      // out: push in on the window, accelerating into the cut at 2.0 ("because" starts at 1.92, mid-sentence)
+      tl.fromTo("#s1 .stage", { scale: 1, filter: "blur(0px)" }, { scale: 2.6, filter: "blur(10px)", duration: 0.18, ease: "power3.in" }, 1.82);
 
-      // ---- S2 2-4: the window fills the frame; red strike through "bad code." on beat 3.0 ----
+      // ---- S2 2.0-3.62: the window fills the frame; red strike through "bad code." as the word ends ----
       const cur2 = q("#s2 .win .cursor");
       tl.set(cur2, { attr: { x: rowEnd[11][0], y: rowEnd[11][1] } }, 0);
-      tl.fromTo(cur2, { opacity: 1 }, { opacity: 0, duration: 0.25, ease: "steps(1)", yoyo: true, repeat: 5 }, 2.4);
+      tl.fromTo(cur2, { opacity: 1 }, { opacity: 0, duration: 0.25, ease: "steps(1)", yoyo: true, repeat: 3 }, 2.3);
       tl.fromTo("#s2 .stage", { scale: 1.083, filter: "blur(10px)" }, { scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, 2.0);
       tl.fromTo("#s2 .win", { opacity: 1 }, { opacity: 0.4, duration: 0.5, ease: "power2.out" }, 2.05);
-      tl.fromTo("#s2 .strike", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "expo.out" }, 3.0);
-      tl.fromTo("#s2 .cam", { scale: 1 }, { scale: 1.025, duration: 1.9, ease: "none" }, 2.0);
-      tl.fromTo("#s2 .dip", { opacity: 0 }, { opacity: 0.45, duration: 0.1, ease: "none" }, 3.9);   // out: dip, then hard cut to black
+      tl.fromTo("#s2 .win .r4, #s2 .win .r5", { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "power2.out" }, 2.05);   // the rows behind "because of / bad code." clear so the caption sits on white
+      tl.fromTo("#s2 .strike", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "expo.out" }, 2.95);
+      tl.fromTo("#s2 .cam", { scale: 1 }, { scale: 1.025, duration: 1.62, ease: "none" }, 2.0);
+      tl.fromTo("#s2 .dip", { opacity: 0 }, { opacity: 0.45, duration: 0.1, ease: "none" }, 3.52);   // out: dip, then hard cut to black in the pause
 
-      // ---- S3 4-8 (black): the line tangles while the words build; pulls straight into 8.0 ----
-      draw(q("#knot"), 4.05, 3.3, "power1.inOut");
-      tl.fromTo("#knot", { attr: { d: KNOT_D } }, { attr: { d: LINE_D }, duration: 0.55, ease: "power3.inOut" }, 7.45);
-      tl.fromTo("#s3 .cam", { scale: 1 }, { scale: 1.03, duration: 4.0, ease: "none" }, 4.0);
-      tl.set("#badge", { filter: "invert(1)" }, 4.0);   // black/white flip of the badge on the black scene
+      // ---- S3 3.62-6.6 (black): the line tangles while the words build; pulls straight in the pause after "problem." ----
+      draw(q("#knot"), 3.66, 2.4, "power1.inOut");
+      tl.fromTo("#knot", { attr: { d: KNOT_D } }, { attr: { d: LINE_D }, duration: 0.48, ease: "power3.inOut" }, 6.12);
+      tl.fromTo("#s3 .cam", { scale: 1 }, { scale: 1.03, duration: 2.98, ease: "none" }, 3.62);
+      tl.set("#badge", { filter: "invert(1)" }, 3.62);   // black/white flip of the badge on the black scene
 
-      // ---- S4 8-10.5: white iris from the full stop after "problem."; ruler ticks draw out from the centre ----
-      const IRIS = "930px 583px";
-      tl.fromTo("#s4 .stage", { clipPath: `circle(0px at ${IRIS})` }, { clipPath: `circle(2300px at ${IRIS})`, duration: 0.45, ease: "power2.in" }, 8.0);
-      tl.set("#badge", { filter: "invert(0)" }, 8.25);
+      // ---- S4 6.6-9.3: white iris from the full stop after "problem."; ruler ticks draw out from the centre ----
+      const IRIS = "940px 584px";
+      tl.fromTo("#s4 .stage", { clipPath: "circle(0px at " + IRIS + ")" }, { clipPath: "circle(2300px at " + IRIS + ")", duration: 0.45, ease: "power2.in" }, 6.6);
+      tl.set("#badge", { filter: "invert(0)" }, 6.85);
       [...qa("#s4 .tk")].sort((a, b) => Math.abs(a.dataset.x - 540) - Math.abs(b.dataset.x - 540)).forEach((tk, i) =>
-        tl.fromTo(tk, { scaleY: 0 }, { scaleY: 1, transformOrigin: "50% 0%", duration: 0.3, ease: "expo.out" }, 8.6 + Math.floor((i + 1) / 2) * 0.1));
-      tl.fromTo("#s4 .cam", { scale: 1 }, { scale: 1.025, duration: 2.5, ease: "none" }, 8.0);
+        tl.fromTo(tk, { scaleY: 0 }, { scaleY: 1, transformOrigin: "50% 0%", duration: 0.3, ease: "expo.out" }, 7.2 + Math.floor((i + 1) / 2) * 0.1));
+      tl.fromTo("#s4 .cam", { scale: 1 }, { scale: 1.025, duration: 2.7, ease: "none" }, 6.6);
       // out: slide left; scene 5 slides in carrying the same line
-      tl.fromTo("#s4 .stage", { x: 0 }, { x: -1080, duration: 0.35, ease: "power3.inOut" }, 10.5);
-      tl.fromTo("#s5 .stage", { x: 1080 }, { x: 0, duration: 0.35, ease: "power3.inOut" }, 10.5);
+      tl.fromTo("#s4 .stage", { x: 0 }, { x: -1080, duration: 0.32, ease: "power3.inOut" }, 9.3);
+      tl.fromTo("#s5 .stage", { x: 1080 }, { x: 0, duration: 0.32, ease: "power3.inOut" }, 9.3);
 
-      // ---- S5 10.5-12.5: bubbles take turns ----
+      // ---- S5 9.3-10.95: bubbles take turns ----
       const typing = (sel, t0, cycles) => qa(sel).forEach((d, i) =>
         tl.fromTo(d, { y: 0 }, { y: -12, duration: 0.17, ease: "sine.inOut", yoyo: true, repeat: cycles * 2 - 1 }, t0 + i * 0.1));
-      tl.fromTo("#s5 .bl", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, svgOrigin: "140 1018", duration: 0.35, ease: "expo.out" }, 10.85);
-      tl.fromTo("#s5 .bl .msg", { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "power2.out" }, 11.4);
-      tl.fromTo("#s5 .bl .dots", { opacity: 1 }, { opacity: 0, duration: 0.1, ease: "power2.out" }, 11.35);
-      typing("#s5 .bl .dots circle", 10.95, 1);
-      tl.fromTo("#s5 .bl .msg rect", { scaleX: 0 }, { scaleX: 1, transformOrigin: "0% 50%", duration: 0.25, ease: "expo.out", stagger: 0.08 }, 11.4);
-      tl.fromTo("#s5 .br", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, svgOrigin: "936 1098", duration: 0.35, ease: "expo.out" }, 11.35);
-      typing("#s5 .br .dots circle", 11.5, 2);
-      tl.fromTo("#s5 .cam", { scale: 1 }, { scale: 1.03, duration: 1.8, ease: "none" }, 10.5);
+      tl.fromTo("#s5 .bl", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, svgOrigin: "140 1018", duration: 0.35, ease: "expo.out" }, 9.62);
+      typing("#s5 .bl .dots circle", 9.72, 1);
+      tl.fromTo("#s5 .bl .dots", { opacity: 1 }, { opacity: 0, duration: 0.1, ease: "power2.out" }, 10.05);
+      tl.fromTo("#s5 .bl .msg", { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "power2.out" }, 10.08);
+      tl.fromTo("#s5 .bl .msg rect", { scaleX: 0 }, { scaleX: 1, transformOrigin: "0% 50%", duration: 0.25, ease: "expo.out", stagger: 0.08 }, 10.08);
+      tl.fromTo("#s5 .br", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, svgOrigin: "936 1098", duration: 0.35, ease: "expo.out" }, 10.05);
+      typing("#s5 .br .dots circle", 10.2, 1);
+      tl.fromTo("#s5 .cam", { scale: 1 }, { scale: 1.03, duration: 1.65, ease: "none" }, 9.3);
       // out: zoom through the gap between the bubbles
-      tl.fromTo("#s5 .stage", { scale: 1, filter: "blur(0px)", opacity: 1 }, { scale: 3.2, filter: "blur(12px)", opacity: 0, duration: 0.2, ease: "power3.in" }, 12.3);
+      tl.fromTo("#s5 .stage", { scale: 1, filter: "blur(0px)", opacity: 1 }, { scale: 3.2, filter: "blur(12px)", opacity: 0, duration: 0.18, ease: "power3.in" }, 10.77);
 
-      // ---- S6 12.5-15: map draws on, route walks to the pin ----
-      tl.fromTo("#s6 .stage", { scale: 1.35, filter: "blur(12px)", opacity: 0.3 }, { scale: 1, filter: "blur(0px)", opacity: 1, duration: 0.45, ease: "expo.out" }, 12.5);
-      qa("#s6 .ct").forEach((p, i) => draw(p, 12.25 + i * 0.04, 0.9, "power2.out"));   // starts under the zoom-through so the map is already forming
-      draw(q("#s6 .rmask"), 13.0, 0.85, "power2.inOut");
-      tl.fromTo("#s6 .pin", { y: -70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 13.88);
-      [14.05, 14.45].forEach((t, i) => tl.to("#s6 .ping" + i, { keyframes: [{ opacity: 1, duration: 0.02 }, { opacity: 0, attr: { r: 70 }, duration: 0.6, ease: "power2.out" }] }, t));
-      tl.fromTo("#s6 .cam", { scale: 1 }, { scale: 1.03, duration: 2.3, ease: "none" }, 12.5);
+      // ---- S6 10.95-12.8: map draws on, route walks to the pin on "needs," ----
+      tl.fromTo("#s6 .stage", { scale: 1.35, filter: "blur(12px)", opacity: 0.3 }, { scale: 1, filter: "blur(0px)", opacity: 1, duration: 0.45, ease: "expo.out" }, 10.95);
+      qa("#s6 .ct").forEach((p, i) => draw(p, 10.7 + i * 0.035, 0.8, "power2.out"));   // starts under the zoom-through so the map is already forming
+      draw(q("#s6 .rmask"), 11.2, 0.75, "power2.inOut");
+      tl.fromTo("#s6 .pin", { y: -70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 12.0);
+      [12.15, 12.45].forEach((t, i) => tl.to("#s6 .ping" + i, { keyframes: [{ opacity: 1, duration: 0.02 }, { opacity: 0, attr: { r: 70 }, duration: 0.5, ease: "power2.out" }] }, t));
+      tl.fromTo("#s6 .cam", { scale: 1 }, { scale: 1.03, duration: 1.85, ease: "none" }, 10.95);
       // out: push up
-      tl.fromTo("#s6 .stage", { y: 0 }, { y: -760, duration: 0.2, ease: "power3.in" }, 14.8);
+      tl.fromTo("#s6 .stage", { y: 0 }, { y: -760, duration: 0.18, ease: "power3.in" }, 12.62);
 
-      // ---- S7 15-17.5: arrives from below; placeholders snap into solid blocks; the last is a black button ----
-      tl.fromTo("#s7 .stage", { y: 760, filter: "blur(12px)" }, { y: 0, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 15.0);
-      const SNAP = [["b1", 15.55], ["p1", 15.75], ["b2", 15.95], ["p2", 16.15], ["p3", 16.25], ["b3", 16.4], ["b4", 16.52], ["p4", 16.7], ["b5", 16.85], ["b6", 16.95], ["p5", 17.1]];
+      // ---- S7 12.8-15.35: arrives from below; placeholders snap into solid blocks; the last is a black button on "it," ----
+      tl.fromTo("#s7 .stage", { y: 760, filter: "blur(12px)" }, { y: 0, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 12.8);
+      const SNAP = [["b1", 13.2], ["p1", 13.38], ["b2", 13.56], ["p2", 13.74], ["p3", 13.84], ["b3", 14.0], ["b4", 14.12], ["p4", 14.3], ["b5", 14.46], ["b6", 14.56], ["p5", 14.86]];
       SNAP.forEach(([id, t]) => {
         const el = q("#s7 ." + id), card = el.classList.contains("card");
         tl.set(el, { attr: { "stroke-dasharray": "none" } }, t);
-        tl.fromTo(el, { fill: "#F3F3F3", stroke: "#C4C4C4", strokeWidth: 2.5 }, { fill: card ? BG : INK, stroke: INK, strokeWidth: card ? 4 : 2.5, duration: 0.08, ease: "none" }, t);
-        tl.fromTo(el, { scale: 1.05 }, { scale: 1, transformOrigin: "50% 50%", duration: 0.25, ease: "power3.out" }, t);
+        tl.fromTo(el, { fill: "#F3F3F3", stroke: "#C4C4C4", attr: { "stroke-width": 2.5 } }, { fill: card ? BG : INK, stroke: INK, attr: { "stroke-width": card ? 4 : 2.5 }, duration: 0.08, ease: "none" }, t);
+        // snap pulse: a keyframed to() so the resting state stays scale 1 (a fromTo applied its 1.05 at build time in v1,
+        // which made every unsnapped placeholder 5% too big and pushed it past the frame)
+        gsap.set(el, { transformOrigin: "50% 50%" });
+        tl.to(el, { keyframes: [{ scale: 1.05, duration: 0.01 }, { scale: 1, duration: 0.25, ease: "power3.out" }] }, t);
       });
-      draw(q("#s7 .arrow"), 17.18, 0.25, "power2.out");
-      tl.fromTo("#s7 .cam", { scale: 1 }, { scale: 1.025, duration: 2.5, ease: "none" }, 15.0);
+      draw(q("#s7 .arrow"), 14.94, 0.25, "power2.out");
+      tl.fromTo("#s7 .cam", { scale: 1 }, { scale: 1.025, duration: 2.55, ease: "none" }, 12.8);
 
-      // ---- S8 17.5-20: pills land on the beats, outlines draw on; then fly to centre ----
-      [17.42, 18.0, 18.5].forEach((t, i) => {   // on the beats; "Websites" starts just before the hard cut so the cut frame is not empty
+      // ---- S8 15.35-18.0: pills land on their spoken words, outlines draw on; then fly to centre ----
+      [15.3, 16.44, 17.22].forEach((t, i) => {   // "Websites" starts just before the hard cut so the cut frame is not empty
         tl.fromTo("#s8 .p" + i, { opacity: 0, scale: 0.86, filter: "blur(8px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.35, ease: "expo.out" }, t);
         draw(q("#s8 .p" + i + " rect"), t, 0.45, "power2.out");
       });
-      tl.fromTo("#s8 .cam", { scale: 1 }, { scale: 1.03, duration: 2.5, ease: "none" }, 17.5);
-      tl.fromTo("#s8 .stage", { scale: 1, opacity: 1, filter: "blur(0px)" }, { scale: 0.15, opacity: 0, filter: "blur(10px)", duration: 0.36, ease: "power3.in" }, 19.68);
+      tl.fromTo("#s8 .cam", { scale: 1 }, { scale: 1.03, duration: 2.65, ease: "none" }, 15.35);
+      tl.fromTo("#s8 .stage", { scale: 1, opacity: 1, filter: "blur(0px)" }, { scale: 0.15, opacity: 0, filter: "blur(10px)", duration: 0.34, ease: "power3.in" }, 17.66);
 
-      // ---- END 20-25: wordmark lands on the impact, rule draws, line builds, button; arrow nudges in the hold ----
-      tl.fromTo("#end .wm", { scale: 1.3, filter: "blur(18px)" }, { scale: 1, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 20.0);   // lands on the impact, visible from its first frame
-      tl.fromTo("#end .brule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 20.35);
-      tl.fromTo("#end .btn", { opacity: 0, y: 24, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 21.6);
+      // ---- END 18.0-23.0: wordmark lands on the impact, rule draws, line builds with the VO, button; arrow nudges in the hold ----
+      tl.fromTo("#end .wm", { scale: 1.3, filter: "blur(18px)" }, { scale: 1, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 18.0);   // lands on the impact, visible from its first frame
+      tl.fromTo("#end .brule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 18.3);
+      tl.fromTo("#end .btn", { opacity: 0, y: 24, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 19.95);
       gsap.set("#end .arr", { x: 0 });
-      [22.6, 23.8].forEach((t) => tl.to("#end .arr", { x: 6, duration: 0.22, ease: "power2.inOut", yoyo: true, repeat: 1 }, t));
+      [20.9, 22.0].forEach((t) => tl.to("#end .arr", { x: 6, duration: 0.22, ease: "power2.inOut", yoyo: true, repeat: 1 }, t));
 
       // ---- plate: constant small life ----
-      tl.fromTo("#plate .grid", { y: 0 }, { y: -108, duration: 25, ease: "none" }, 0);
-      tl.fromTo("#plate .topo g", { x: 0, y: 0 }, { x: -70, y: 24, duration: 25, ease: "none" }, 0);
+      tl.fromTo("#plate .grid", { y: 0 }, { y: -108, duration: 23, ease: "none" }, 0);
+      tl.fromTo("#plate .topo g", { x: 0, y: 0 }, { x: -64, y: 22, duration: 23, ease: "none" }, 0);
       gsap.set("#plate .topo", { opacity: 1 });
-      tl.to("#plate .topo", { opacity: 0, duration: 0.2, ease: "power2.out" }, 12.4);   // scene 6 has its own map
-      tl.to("#plate .topo", { opacity: 1, duration: 0.3, ease: "power2.out" }, 15.0);
-      tl.fromTo("#badge", { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.7, duration: 0.25, ease: "power2.in" }, 19.6);   // the wordmark takes over
+      tl.to("#plate .topo", { opacity: 0, duration: 0.2, ease: "power2.out" }, 10.85);   // scene 6 has its own map
+      tl.to("#plate .topo", { opacity: 1, duration: 0.3, ease: "power2.out" }, 12.8);
+      tl.fromTo("#badge", { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.7, duration: 0.25, ease: "power2.in" }, 17.65);   // the wordmark takes over
 
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
