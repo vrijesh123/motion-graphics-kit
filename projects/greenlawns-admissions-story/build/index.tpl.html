@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <!--
+      Greenlawns "Admissions open 2027-2028" Instagram story, 1080x1920, 12 s. Option A, "Pieces find their place".
+      Every graphic is cut from the client's flat poster by build/extract_layers.py (assets/layers/, boxes in
+      poster px); the crest is the client's PNG. #poster holds the poster at 1:1 and is scaled to POSTER_SCALE so the
+      crest clears Instagram's profile bar and the url clears the reply bar. Set POSTER_SCALE = 1, POSTER_Y = 0 for
+      the poster's original layout. No voice-over: the soundtrack is music + SFX from cues.json.
+    -->
+    <style>
+      :root { --cream: #FDF5EC; --grid: #F3EADF; --shadow: rgba(20, 50, 30, 0.28); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
+      #root { position: relative; width: 1080px; height: 1920px; background: var(--cream); overflow: hidden; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      #grid { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      #wave { position: absolute; left: 0; top: 1790px; width: 1080px; height: 130px; transform-origin: 50% 100%; }
+      #poster { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      #cam { position: absolute; inset: 0; }
+      .ly { position: absolute; display: block; }
+      #puzzle { position: absolute; inset: 0; }
+      .pz { position: absolute; }
+      .pzm { position: absolute; inset: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; overflow: hidden; }
+      .pzp, .pzf { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1080" data-height="1920">
+
+      <section id="story" class="clip" data-start="0" data-duration="12" data-track-index="0" data-track-kind="graphics">
+        <svg id="grid" viewBox="0 0 1080 1920" aria-hidden="true" data-layout-allow-overflow></svg>
+        <img id="wave" src="assets/layers/wave.png" alt="" />
+        <div id="poster" data-layout-allow-overflow><div id="cam">
+        <!--LAYERS-->
+        </div></div>
+      </section>
+
+      <!-- soundtrack from tools/make_audio.py (reads cues.json) -->
+      <audio id="mix" src="assets/audio.wav" data-start="0" data-duration="12" data-volume="1" data-track-index="1"></audio>
+    </div>
+
+    <script>
+      const q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)];
+      const css = getComputedStyle(document.documentElement);
+      const GRID = css.getPropertyValue("--grid").trim(), SHADOW = css.getPropertyValue("--shadow").trim();
+
+      // poster placement inside Instagram's safe area (see header comment)
+      const POSTER_SCALE = 0.82, POSTER_Y = 172;
+
+      // faint grid as on the poster: 135 x 121 px cells
+      q("#grid").innerHTML = (() => {
+        let s = "";
+        for (let x = 45.5; x <= 1080; x += 135.3) s += `<line x1="${x}" y1="0" x2="${x}" y2="1920"/>`;
+        for (let y = 111.3 - 121; y <= 1920; y += 121) s += `<line x1="0" y1="${y}" x2="1080" y2="${y}"/>`;
+        return `<g stroke="${GRID}" stroke-width="2.5">${s}</g>`;
+      })();
+
+      const tl = gsap.timeline({ paused: true });
+      gsap.set("#poster", { scale: POSTER_SCALE, y: POSTER_Y, transformOrigin: "540px 0px" });
+
+      // helpers
+      const wipe = (sel, t, dur = 0.4, from = "right") => tl.fromTo(sel,
+        { clipPath: from === "right" ? "inset(-5% 100% -5% 0%)" : "inset(-5% 50% -5% 50%)" },
+        { clipPath: "inset(-5% -2% -5% -2%)", duration: dur, ease: "power2.inOut" }, t);
+      const warp = (els, t, stagger) => tl.fromTo(els,
+        { yPercent: (i) => (i % 2 ? 45 : -45), rotation: (i) => (i % 2 ? 10 : -10), scaleY: 1.4, opacity: 0, filter: "blur(8px)" },
+        { yPercent: 0, rotation: 0, scaleY: 1, opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "expo.out", stagger }, t);
+      const burst = (sel, t) => qa(sel).forEach((el) => {
+        const left = el.classList.contains("tkl");
+        tl.fromTo(el, { scale: 0, opacity: 0, transformOrigin: left ? "100% 50%" : "0% 50%" },
+          { scale: 1, opacity: 1, duration: 0.38, ease: "expo.out" }, t);
+      });
+      const pulse = (sel, t) => tl.to(sel, { scale: 0.86, duration: 0.22, ease: "sine.inOut", yoyo: true, repeat: 1 }, t);
+
+      // ---- 0.0-1.3 headline: the message is readable by ~1.3 s ----
+      tl.fromTo("#wave", { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 0);
+      tl.fromTo("#logo", { scale: 0, rotation: -14, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 0.05);
+      wipe("#head-brush", 0.1, 0.42);
+      warp(qa(".hl.adm"), 0.22, 0.035);
+      warp(qa(".hl.opn"), 0.52, 0.05);
+      burst("#tk-head-l, #tk-head-r", 0.72);
+      wipe("#ribbon", 0.85, 0.36, "center");
+      tl.fromTo("#year", { y: 34, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.34, ease: "expo.out" }, 1.0);
+      burst("#tk-year-l, #tk-year-r", 1.12);
+
+      // ---- 1.55-3.3 puzzle: four pieces fly in and click into place ----
+      const FLY = [ // key, start, from x, from y, from rotation  (poster px)
+        ["tl", 1.55, -900, -220, -16],
+        ["tr", 1.95,  920, -160,  14],
+        ["bl", 2.35, -900,  260,  12],
+        ["br", 2.75,  900,  320, -14],
+      ];
+      FLY.forEach(([k, t, x, y, r]) => {
+        const el = `#pz-${k}`;
+        tl.fromTo(el, { x, y, rotation: r, scale: 1.08, filter: `drop-shadow(0px 26px 30px ${SHADOW})` },
+          { x: 0, y: 0, rotation: 0, scale: 1.02, duration: 0.5, ease: "power4.out" }, t);
+        tl.to(el, { scale: 1, filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))", duration: 0.16, ease: "power2.out" }, t + 0.48); // the click
+      });
+      tl.to("#puzzle", { scale: 1.012, transformOrigin: "538px 1017px", duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 }, 3.3);
+
+      // ---- 3.85-6.3 date, tagline, url ----
+      wipe("#date-brush", 3.85, 0.42);
+      tl.fromTo("#d-21st", { scale: 0.55, opacity: 0, filter: "blur(8px)", transformOrigin: "50% 60%" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 4.05);
+      tl.fromTo("#d-november", { x: -40, opacity: 0, filter: "blur(8px)" }, { x: 0, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 4.2);
+      wipe("#date-line", 4.45, 0.4);
+      burst("#tk-date-l, #tk-date-r", 4.5);
+      tl.fromTo(".tw", { y: 22, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out", stagger: 0.11 }, 5.0);
+      tl.fromTo("#url", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "expo.out" }, 6.05);
+
+      // ---- 6.4-12 hold: small life everywhere, nothing new to read ----
+      const PUSH = { tl: "30% 30%", tr: "62% 26%", bl: "45% 34%", br: "62% 36%" };   // aim at faces, away from shirt crests
+      Object.entries(PUSH).forEach(([k, o], i) =>
+        tl.fromTo(`#pz-${k} .pzp`, { scale: 1 }, { scale: 1.06, transformOrigin: o, duration: 9.5 - i * 0.3, ease: "sine.inOut" }, 2.5 + i * 0.4));
+      tl.fromTo("#cam", { scale: 1 }, { scale: 1.02, transformOrigin: "540px 960px", duration: 5.6, ease: "sine.inOut" }, 6.4);
+      [7.2, 9.2, 11.0].forEach((t) => pulse(".tk", t));
+      tl.to("#wave", { scaleY: 1.12, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 }, 6.4);
+      tl.to("#logo", { rotation: 3, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 }, 6.4);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
