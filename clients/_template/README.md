@@ -22,20 +22,15 @@ Everything needed to make on-brand videos for <Client name> on this branch. Read
 5. <voice-over: voice, accent, who records it>
 
 ## Files
-- `brand.md`: palette (as the template's `:root` tokens), fonts (`@font-face` block), logo rules, graphic motifs,
+- `brand.md`: palette (as `:root` colour tokens), fonts (`@font-face` block), logo rules, graphic motifs,
   motion direction, voice and wording.
 - `profile.md`: positioning, services, process, proof points, audience, video angles.
 - `sources.md`: every source with its URL and retrieval date, plus what was found but not verified.
 - `assets/logo/`, `assets/fonts/` (with licence), `assets/reference/` (the client's own brand images, for look only).
 
 ## Starting a video for this client
-```bash
-cp -r projects/_template projects/<slug>-<video>
-cp clients/<slug>/assets/fonts/* projects/<slug>-<video>/assets/fonts/
-cp clients/<slug>/assets/logo/<logo file> projects/<slug>-<video>/assets/
-```
-Then paste the `:root` palette and the `@font-face` block from `brand.md` into the project's `index.html`, and
-follow the `make-motion-video` skill.
+Copy the fonts and logo into the project's `assets/`, then paste the `:root` palette and the `@font-face` block from
+`brand.md` into its `index.html`. (On the `3d-graphics` branch there is no project template yet; see `CLAUDE.md`.)
 
 ## Decisions and feedback (newest last)
 - <YYYY-MM-DD>: pack created from public sources.

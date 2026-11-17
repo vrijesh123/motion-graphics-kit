@@ -1,13 +1,13 @@
 # <Client name>: brand for motion graphics
 
-How <Client name> looks and sounds, translated into this kit's template. Measured values say where they were
+How <Client name> looks and sounds, translated for video. Measured values say where they were
 measured; anything suggested by us (not by the client) is marked "suggested".
 
 ## Look in one line
 <background, ink, accent, type, motifs>
 
 ## Palette
-The template has five colour tokens. Keep one accent at most (kit rule).
+Five colour tokens. Keep one accent at most (kit rule).
 
 | Token | Hex | Source | Use in video |
 |---|---|---|---|
@@ -22,7 +22,7 @@ The template has five colour tokens. Keep one accent at most (kit rule).
 ```
 
 ## Type
-<fonts, weights, tracking, casing; how they map to the template's .lead / .keyb / .key styles>
+<fonts, weights, tracking, casing; how they map to on-screen text styles>
 
 ```css
 /* @font-face block for the project's index.html (files: assets/fonts/) */
@@ -35,7 +35,7 @@ The template has five colour tokens. Keep one accent at most (kit rule).
 <motifs from the client's own site and posts: grids, lines, shapes, icons, photo style>
 
 ## Motion direction (suggested)
-<which references in refrences/2d-motion-graphics/ fit, pace, easing, transitions>
+<which references in refrences/ fit, pace, easing, camera moves, transitions>
 
 ## Voice and wording
 <tone, phrases the client uses, words to avoid, pronunciation of the name for voice-over and Whisper fixes>

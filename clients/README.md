@@ -1,5 +1,9 @@
 # Clients: one branch each
 
+> **On the `3d-graphics` branch:** this branch is the 3D kit and also carries the WOLFx pack (`clients/wolfx/`),
+> so the rules below that say "`main` holds the kit only" describe `main`. Never merge `3d-graphics` into `main`
+> or another client's branch; see `CLAUDE.md` ("Branches and clients").
+
 `main` holds the kit only: tools, skills, the project template and the reference library. Every client gets
 its own git branch, cut from `main` and named after the client's slug (lower case, no spaces): `wolfx`, `acme`...
 

@@ -1,11 +1,12 @@
-# Guide: making 2D motion graphics videos with this kit
+# Guide: the 3D motion graphics kit (branch `3d-graphics`)
 
-This kit turns a brief and a voice-over into a finished vertical motion graphics video (1080x1920 MP4).
-**Claude Code** does the work: it writes the script, builds the animation as an HTML page, makes the soundtrack and
-renders the video with **HyperFrames**. You give it references, the brief and feedback.
+This branch is for 3D motion graphics videos made by **Claude Code** with **HyperFrames**: Claude writes the script,
+builds the 3D scenes as an HTML page (Three.js/WebGL, animated with GSAP), makes the soundtrack and renders the MP4.
+You give it references, the brief and feedback.
 
-The guide has eight parts: setup, skills, giving references, clients, making a video, revising, prompts and
-troubleshooting.
+It was split off the 2D kit on `main`. **The 3D starter project, the 3D project skills and the 3D reference library
+are not set up yet.** Until they are, Claude builds from the HyperFrames skills directly. The 2D versions are still on
+`main` if you want to look at them (`git show main:docs/GUIDE.md`).
 
 ---
 
@@ -19,11 +20,11 @@ troubleshooting.
 | **Python 3.10+** | The scripts in `tools/` | `python --version` |
 | Python packages | Whisper transcripts, downloads | `pip install numpy faster-whisper yt-dlp` |
 | Git | Get the kit and keep versions | `git --version` |
+| A working GPU driver | WebGL renders on the GPU; in software it is much slower | Chrome's `chrome://gpu` shows hardware acceleration |
 
 Per operating system:
 - **Windows:** install Node 22 LTS from nodejs.org and Python from python.org (tick "Add to PATH"). For FFmpeg,
   download a build from gyan.dev or BtbN, unzip it, and add its `bin` folder to PATH. Use Git Bash or PowerShell.
-  If you can't install system-wide, a portable Node/FFmpeg works: prepend their folders to PATH in each terminal.
 - **macOS:** `brew install node@22 ffmpeg python`.
 - **Linux:** `sudo apt install ffmpeg python3-pip`, and Node 22 via nvm (`nvm install 22 && nvm use 22`).
 
@@ -31,205 +32,106 @@ Get the kit:
 ```bash
 git clone <repo-url> motion-graphics
 cd motion-graphics
-git switch <client>      # optional: a client's branch (part 4); main is the kit on its own
+git switch 3d-graphics
 ```
-
-**Test the whole chain once** by rendering the template. If this works, everything is set up:
-```bash
-cd projects/_template
-npm run audio      # makes assets/audio.wav from cues.json
-npm run check      # should end with "Check passed"
-npm run render -- -o ../../outputs/template-test.mp4
-```
-The first run downloads HyperFrames and its bundled Chromium, so it takes a few minutes. `npm run audio` tries
-`python` and then `python3`, so it works on Windows, macOS and Linux.
 
 ---
 
-## 2. Skills to add
+## 2. Skills
 
-Skills are instruction packs Claude Code loads when a task needs them. There are three groups.
+Skills are instruction packs Claude Code loads when a task needs them.
 
 ### a) HyperFrames skills (install once per computer, required)
 ```bash
 npx hyperframes skills
 ```
-This copies them into `~/.claude/skills/` (and `~/.agents/skills/`). Start a **new** Claude Code session afterwards.
-Update later with `npx hyperframes skills update`.
+This copies them into `~/.claude/skills/`. Start a **new** Claude Code session afterwards. Update later with
+`npx hyperframes skills update`.
 
 | Skill | What it gives Claude |
 |---|---|
-| `hyperframes` | The rules for writing compositions that render correctly. Read before any video work. |
+| `hyperframes` | The rules for writing compositions that render correctly. For 3D: `references/types/3d.md` (camera, light, materials), `references/runtimes.md` (how Three.js is driven frame by frame) and `references/path-tracing.md` (photoreal light, slow). |
 | `hyperframes-cli` | Check, snapshot, preview, render, and how to recover from render errors. |
-| `hyperframes-registry` | About 450 ready-made blocks: transitions, kinetic type, captions, charts. |
+| `hyperframes-registry` | About 450 ready-made blocks, including 3D ones: 3D transitions, 3D UI reveals, extruded 3D code, phone and laptop models. |
 | `media-use` | Voice-over, music, SFX, images, cut-outs, colour grades, audio mixing. |
-| `figma` | Pull a brand, logo or frame from Figma. Optional. |
-| `slideshow`, `remotion-to-hyperframes`, `reverse-any-video`, `style-sampling` | Installed too; not needed for this workflow. `reverse-any-video` and `style-sampling` need HyperFrames Pro. |
+| `remotion-to-hyperframes` | Bring in existing Three.js code or renders from Blender and check them frame by frame. |
+| `style-sampling` | Includes a "3D Brand Explainer" style (HyperFrames Pro). |
 
-### b) Project skills (already in this repo, nothing to install)
-They live in `.claude/skills/` and load automatically when Claude Code runs inside this folder.
-
-| Skill | When it's used |
-|---|---|
-| `motion-graphics-2d` | Craft reference: formats, motion principles, kinetic type rules, delivery checklist. |
-| `analyze-motion-reference` | You share a reference video. Claude downloads it, breaks it down and files the analysis. |
-| `make-motion-video` | You ask for a video. It runs the full pipeline from brief to MP4. |
-
-To check that they're loaded, type `/` in Claude Code: the skills appear in the list.
+### b) Project skills
+None on this branch yet. The 2D ones are on `main`.
 
 ### c) Optional connectors (your own accounts)
-- **Voice-over:** any TTS service you have (ElevenLabs, HeyGen and others). Connect one in Claude Code
-  (`/mcp`, or claude.ai connectors), or generate the voice yourself and give Claude the MP3. Use only voices you have
-  the rights to.
-- **Figma**, if your brand assets live there.
-
-The kit works without any connector: you supply the voice-over file, and the music and SFX are generated by code.
-
----
-
-## 3. Giving references
-
-References teach Claude the look and pace you want. Four are already analysed in `refrences/2d-motion-graphics/`;
-read `SUMMARY.md` there for a one-page comparison. Pick from them by name ("the Solution Wagon style") or add new ones.
-
-**Add a reference by link** (Pinterest, Instagram, YouTube, TikTok):
-> Analyse this motion graphics reference and add it to the library: https://www.pinterest.com/pin/123.../
-
-**Add several at once:**
-> Add these three references to the library and tell me how they differ: <link 1> <link 2> <link 3>
-
-**Add a file you already have:** put it anywhere in the folder (for example `~/Downloads/ref.mp4`) and say:
-> Analyse ~/Downloads/ref.mp4 as a motion graphics reference.
-
-What happens: Claude downloads the video, measures cuts, audio and voice timing, looks at the frames, writes
-`refrences/2d-motion-graphics/<id>/analysis.md` (scene table, palette, type, motion, how to rebuild it), deletes the
-frames and updates `SUMMARY.md`. Instagram sometimes blocks downloads. If it does, download the reel yourself and give
-Claude the file.
-
-**Good references:** vertical, under about 60 s, voice-over driven, a clear style. One reference for the overall
-look plus one for a specific move ("use the iris reveal from this one") works well.
-
-**Rules:** borrow structure, pacing and motion, never the artwork, logos or copy. The videos stay on your machine
-(git-ignored) because they belong to other people.
+- **Voice-over:** any TTS service you have (ElevenLabs, HeyGen and others). Connect one in Claude Code (`/mcp`, or
+  claude.ai connectors), or generate the voice yourself and give Claude the MP3. Use only voices you have the
+  rights to.
+- **3D assets:** a generator or modelling tool connected the same way, if a video needs a model that code can't
+  build. Generated assets cost credits; check the licence before using them in client work.
 
 ---
 
-## 4. Clients: one branch each
+## 3. References
 
-`main` holds the kit (tools, skills, template, references). Each client gets its own branch named after it, for
-example `wolfx`, holding two things the kit doesn't have:
-- `clients/<client>/`, the **client pack**: what the company does, its palette, fonts, logo, tone of voice, proof
-  points, video ideas and what still needs the client's approval, with a source for every fact.
-- `projects/<client>-<video>/`, the client's videos.
-
-On a client branch, Claude reads the pack before writing anything, so you don't have to repeat the brand in every
-brief.
-
-**New client:**
-```bash
-git switch main
-git switch -c acme                      # branch name = client slug
-cp -r clients/_template clients/acme
-```
-> Research Acme (acme.com) and fill in `clients/acme/`. List what they need to confirm.
-
-**Kit updates** (a better tool, a new reference) are made on `main`, then pulled into each client branch with
-`git switch acme && git merge main`. Never merge a client branch into `main` or into another client's branch;
-see `clients/README.md` for the full rules.
-
-**Public repository:** pushing a client branch publishes that client's pack and scripts. Keep client branches on
-your machine or push them to a private remote.
+Analysed references go in `refrences/<id>/` as text: `analysis.md` plus small JSON files from
+`tools/prep_reference.py`. The videos stay on your machine (git-ignored) because they belong to other people.
+Borrow structure, pacing, camera moves and motion, never the artwork, models, logos or copy.
 
 ---
 
-## 5. Making a video
+## 4. Clients
 
-Open Claude Code in the kit folder (`claude`) and give it a brief. A good first message:
+This branch carries one client pack, **WOLFx** (`clients/wolfx/`, brought over from the `wolfx` branch): what the
+company does, its palette, fonts, logo, tone of voice, proof points and what still needs WOLFx's approval, with a
+source for every fact. Claude reads it before writing anything for WOLFx. WOLFx's first video (a 2D promo) and
+its approved copy are on the `wolfx` branch.
 
-> Make a 25 s vertical motion graphics video for **<client>**, a <what they do>.
-> Audience: <who>. Message: <the one thing to remember>. Call to action: <visit / call / DM>.
-> Style: the InsiderForce reference, calm pace. Brand colours <#hex, #hex>, font <name>, logo: `projects/<client>-<slug>/assets/logo.svg` (or tell Claude where the file is).
-> End card: <website>, <phone>. Write the script first and wait for my approval.
-
-What happens next (the `make-motion-video` skill):
-
-1. **Script.** Claude writes `projects/<client>-<slug>/script.md` with the voice-over text and a shot table. Read it,
-   ask for changes, approve it. Scripts should sound like a person talking, at about 50-60 words per 25 s.
-2. **Voice-over.** Record or generate the VO from the approved script and put the MP3 in the project's `assets/`
-   folder (or tell Claude where it is). Claude transcribes it with Whisper, and every word, caption and scene change
-   is timed to it. Check that it spells brand names right.
-3. **Build.** Claude copies `projects/_template`, sets your palette, fonts and logo, and animates each scene.
-4. **Sound.** A music bed and SFX are generated from `cues.json`, which has to match the scene times. The VO is
-   ducked under the music and the mix is loudness-normalised.
-5. **Check and look.** `npm run check` must pass. Claude snapshots frames and looks at them before showing you.
-6. **Render.** The output goes to `outputs/<client>-<slug>-v1-<length>s.mp4`.
-
-**Preview it yourself while it's being built:** in the project folder, run `npx hyperframes preview` and open the
-link. It shows a scrubbable timeline of the live HTML.
-
-**Brand assets** live in the client pack (`clients/<client>/assets/`) and are copied into
-`projects/<name>/assets/` for each video. Logo as SVG is best, PNG with transparency is fine. Fonts as
-.ttf/.otf/.woff2 if they're not on Google Fonts. Voice-over, audio and video files in projects are git-ignored
-automatically, but logos, scripts and `index.html` are not. If this repository is public, keep client branches
-local or on a private remote (part 4).
+Because this branch holds client material, never merge it into `main`. If the repository is public, pushing this
+branch publishes the WOLFx pack: keep it local or on a private remote unless WOLFx agrees.
 
 ---
 
-## 6. Revising
+## 5. Making and revising a video
+
+The flow carries over from the 2D kit: brief, then a script for your approval, then voice-over timing, build,
+check and snapshot, and finally a versioned render in `outputs/<client>-<slug>-v1-<length>s.mp4`. The 3D build
+step has no template yet, so expect the first video to set it up (its `package.json` scripts can start from
+`git show main:projects/_template/package.json`).
 
 Give feedback in plain words and be specific about time and scene:
-> v1 feedback: the hook word at 0:01 is gone too fast; scene 3 is too busy, keep only the shield;
+> v1 feedback: the camera dive at 0:04 is too fast; drop the second object in scene 3;
 > make the end card hold 1 s longer. Render v2.
 
 Claude writes the feedback into `script.md`, changes only what you asked, regenerates the audio if timings moved,
 checks and renders **v2** next to v1. Earlier versions are never overwritten.
 
----
-
-## 7. Prompt cheat sheet
-
-| You want | Say |
-|---|---|
-| Ideas first | "Give me 3 script ideas for <client> about <topic>, 20 s each, in the <ref> style." |
-| Shorter / punchier | "Cut the script to 45 words, keep it conversational, no slogan fragments." |
-| A different style | "Rebuild scene 2 with the black iris reveal from the MotionDesigners reference." |
-| Square / landscape | "Make a 1080x1080 version of v2 for the feed." |
-| Captions only on key words | "Show only the key word of each line, big, centred." |
-| Look at a moment | "Snapshot 4.5 s and 7 s and tell me what's on screen." |
-| Faster / slower | "Scenes feel slow: tighten the holds by about 20% but keep the VO timing." |
-| Use a ready-made effect | "Search the HyperFrames registry for a kinetic type block for the hook." |
+**Preview it yourself while it's being built:** in the project folder, run `npx hyperframes preview` and open the
+link.
 
 ---
 
-## 8. Troubleshooting
+## 6. Troubleshooting
 
 | Problem | Fix |
 |---|---|
 | `hyperframes` errors about the Node version | `node -v` must be 22+. Switch with nvm (`nvm use 22`) or install Node 22. |
 | `ffmpeg: not found` | FFmpeg isn't on PATH in this terminal. Add its `bin` folder and open a new terminal. |
+| 3D renders are very slow, or `check` times out | Chrome is drawing WebGL in software. Fix the GPU driver, or raise the timeouts (see `/hyperframes` `references/path-tracing.md`). |
 | Video has no sound | `assets/audio.wav` is missing (it's git-ignored). Run `npm run audio`. |
 | Captions out of sync | The VO offset differs from `vo_offset` in `cues.json`, or the VO changed. Re-transcribe and re-run audio. |
-| Instagram download fails | Download the reel manually, or add `--cookies-from-browser chrome` to the yt-dlp command. |
 | Whisper writes the brand name wrong | Normal. Correct it in `assets/vo_words.json`; only the times matter for the build. |
 | Claude doesn't use the HyperFrames skills | Run `npx hyperframes skills`, then start a new Claude Code session. |
-| `npm run check` contrast warnings on faint decorative text | Expected for ghost words and mid-animation colours; real reading text must pass. |
-| `npm run check` warnings `nested_structure_needs_subcomposition`, `timeline_track_too_dense`, `negative_z_index` | Structure advice for the Studio timeline view; the template triggers them on purpose (one file, sections). Only errors block a render. |
 
 ---
 
 ## Where things are
 
 ```
-CLAUDE.md                      rules Claude follows in this folder
-docs/GUIDE.md                  this guide
-docs/MEDIA.md                  list of git-ignored media (re-run: python tools/media_manifest.py)
-.claude/skills/                project skills (motion-graphics-2d, analyze-motion-reference, make-motion-video)
-refrences/2d-motion-graphics/  analysed references (SUMMARY.md first)
-clients/README.md              how client branches work
-clients/_template/             blank client pack (copied to clients/<client>/ on a client's branch)
-clients/<client>/              the client pack, on that client's branch only
-projects/_template/            starter project: index.html, cues.json, fonts, grain
-projects/<client>-<slug>/      one folder per video
-tools/                         transcribe, caption_spans, make_audio, prep_reference, seek_snapshot, media_manifest
-outputs/                       finished MP4s (not in git; share them via Drive or similar)
+CLAUDE.md            rules Claude follows in this folder
+docs/GUIDE.md        this guide
+docs/MEDIA.md        list of git-ignored media (re-run: python tools/media_manifest.py)
+clients/wolfx/       the WOLFx client pack (README.md first)
+clients/_template/   blank client pack
+projects/            one folder per video
+refrences/           analysed 3D references (text only)
+tools/               transcribe, caption_spans, make_audio, prep_reference, seek_snapshot, media_manifest
+outputs/             finished MP4s (not in git)
 ```
