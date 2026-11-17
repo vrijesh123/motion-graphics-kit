@@ -1,0 +1,18 @@
+{
+  "threshold": 0.3,
+  "shot_starts_s": [
+    0.0,
+    4.3,
+    8.833,
+    15.567,
+    17.6,
+    20.1
+  ],
+  "cut_count": 5,
+  "shot_count": 6,
+  "avg_shot_length_s": 4.13,
+  "soft_change_candidates_0_15": [
+    3.333
+  ],
+  "note": "scene detection misses dissolves, blur and push transitions; soft candidates (0.15-0.3) may be those, fast motion or flashes"
+}

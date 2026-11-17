@@ -1,0 +1,15 @@
+{
+  "duration_s": 24.768,
+  "width": 1076,
+  "height": 1914,
+  "aspect": "1076:1914",
+  "fps": 30.0,
+  "video_codec": "vp9",
+  "nb_frames": 743,
+  "bitrate_kbps": 939,
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 48000,
+    "channels": 2
+  }
+}
