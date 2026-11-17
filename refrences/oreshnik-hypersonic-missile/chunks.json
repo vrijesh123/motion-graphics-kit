@@ -1,0 +1,63 @@
+{
+ "source": "oreshnik-hypersonic-missile.mp4 (sha256 f2c7b3121322a5c7), originally refrences/oreshnik-hypersonic-missile.mp4",
+ "source_duration_s": 547.84,
+ "source_size": "1920x1080, 25 fps, h264 + aac",
+ "method": "lossless stream copy (ffmpeg segment muxer), split only at hard cuts (scene > 0.3) that fall on keyframes, aiming for about 60 s per chunk (30-90 s allowed)",
+ "note": "chunk times are positions in the source; add start_s to a time inside a chunk to get the source time. No hard cut between 303.16 and 391.16, so part 06 is longer. The source file was removed from refrences/ after splitting (2026-11-17); the chunks are now the reference. Chunks are git-ignored like all reference videos.",
+ "chunks": [
+  {
+   "file": "part-01_000.0s-068.3s.mp4",
+   "start_s": 0.0,
+   "end_s": 68.32,
+   "length_s": 68.32
+  },
+  {
+   "file": "part-02_068.3s-134.5s.mp4",
+   "start_s": 68.32,
+   "end_s": 134.52,
+   "length_s": 66.2
+  },
+  {
+   "file": "part-03_134.5s-201.0s.mp4",
+   "start_s": 134.52,
+   "end_s": 200.96,
+   "length_s": 66.44
+  },
+  {
+   "file": "part-04_201.0s-266.4s.mp4",
+   "start_s": 200.96,
+   "end_s": 266.4,
+   "length_s": 65.44
+  },
+  {
+   "file": "part-05_266.4s-303.2s.mp4",
+   "start_s": 266.4,
+   "end_s": 303.16,
+   "length_s": 36.76
+  },
+  {
+   "file": "part-06_303.2s-391.2s.mp4",
+   "start_s": 303.16,
+   "end_s": 391.16,
+   "length_s": 88.0
+  },
+  {
+   "file": "part-07_391.2s-458.4s.mp4",
+   "start_s": 391.16,
+   "end_s": 458.36,
+   "length_s": 67.2
+  },
+  {
+   "file": "part-08_458.4s-514.1s.mp4",
+   "start_s": 458.36,
+   "end_s": 514.12,
+   "length_s": 55.76
+  },
+  {
+   "file": "part-09_514.1s-547.8s.mp4",
+   "start_s": 514.12,
+   "end_s": 547.84,
+   "length_s": 33.72
+  }
+ ]
+}

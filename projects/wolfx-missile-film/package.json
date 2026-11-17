@@ -1,0 +1,12 @@
+{
+  "name": "wolfx-missile-film",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "audio": "python ../../tools/make_audio.py . || python3 ../../tools/make_audio.py .",
+    "dev": "npx --yes hyperframes@0.9.19 preview",
+    "check": "npx --yes hyperframes@0.9.19 check",
+    "render": "npx --yes hyperframes@0.9.19 render --fps 30 --quality delivery",
+    "publish": "npx --yes hyperframes@0.9.19 publish"
+  }
+}

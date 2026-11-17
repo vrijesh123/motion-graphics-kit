@@ -9,5 +9,5 @@ see [CLAUDE.md](CLAUDE.md) and [docs/GUIDE.md](docs/GUIDE.md).
 Inside:
 - `clients/wolfx/` the WOLFx Digital Agency brand pack (from the `wolfx` branch). `clients/_template/` is the blank pack.
 - `projects/` one folder per video (empty for now).
-- `refrences/` analysed 3D references, text only (empty for now).
+- `refrences/` analysed 3D references, text only (start with `SUMMARY.md`); videos are not in git.
 - `tools/` Whisper transcripts, caption markup, soundtrack generator, reference prep.

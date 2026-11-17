@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, height=1920">
+<title>Lykos Wx-1 | WOLFx</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<!-- three.js r147, vendored (MIT, assets/lib/THREE-LICENSE.txt) so renders need no network for 3D -->
+<script src="assets/lib/three.min.js"></script>
+<style>
+  @font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-Regular.ttf") format("truetype"); font-weight: 400; font-display: block; }
+  @font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-Medium.ttf") format("truetype"); font-weight: 500; font-display: block; }
+  @font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: block; }
+  @font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-Bold.ttf") format("truetype"); font-weight: 700; font-display: block; }
+  @font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-ExtraBold.ttf") format("truetype"); font-weight: 800; font-display: block; }
+
+  /* WOLFx palette (clients/wolfx/brand.md) */
+  :root { --bg: #FFFFFF; --ink: #121212; --soft: #ECECEC; --accent: #FF2B2B; --mute: #909090; }
+  html, body { margin: 0; background: #0B0B0B; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #0B0B0B;
+          font-family: "Poppins", sans-serif; color: #fff; }
+
+  /* white studio sweep behind the exploded view (canvas is transparent there) */
+  #studio { position: absolute; inset: 0; z-index: 0;
+            background: radial-gradient(ellipse 80% 55% at 50% 44%, #2B2B2B 0%, #161616 52%, #080808 100%); }
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 1; }
+  #whiteout { position: absolute; inset: 0; z-index: 5; background: #fff; opacity: 0; }
+
+  /* lead lines: Poppins SemiBold, Title Case, upper third, left-aligned like wolfx.io's hero */
+  .lead { position: absolute; left: 80px; top: 236px; width: 900px; z-index: 8; }
+  .lead .in { font-weight: 700; font-size: 66px; line-height: 1.12; letter-spacing: -0.015em; color: #fff;
+              text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6); }
+  .lead.dark .in { color: #fff; }
+  .lead.narrow { width: 620px; }
+  .lead .w { display: inline-block; margin-right: 0.22em; }
+
+  /* WOLFx button tags on hairline leaders, placed each frame from the 3D anchor */
+  #leaders { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 7; overflow: visible; }
+  .tagwrap { position: absolute; left: 0; top: 0; z-index: 8; }
+  .tag { display: flex; align-items: center; gap: 14px; padding: 14px 24px; background: #fff; color: var(--ink);
+         font-weight: 600; font-size: 34px; line-height: 1; white-space: nowrap; }
+  .tag.inv { background: #fff; color: var(--ink); outline: 3px solid var(--accent); outline-offset: 0; }
+  .tag .ar { font-weight: 400; font-size: 34px; }
+
+  /* the flat interception diagram (shot 7) */
+  #diagram { position: absolute; inset: 0; z-index: 6; background: #0B0B0B; }
+  #diagram svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .dlabel { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 38px; fill: #fff; }
+
+  /* closing spec pills: the WOLFx banner's red-outlined pills */
+  #pills { position: absolute; left: 80px; top: 540px; width: 760px; z-index: 8; }
+  #pills .row { display: flex; gap: 18px; margin-bottom: 18px; }
+  .pill { display: inline-block; padding: 14px 34px; border: 4px solid var(--accent); border-radius: 999px;
+          background: #111; font-weight: 700; font-size: 42px; line-height: 1.1; color: #fff; }
+
+  /* end card */
+  #endmask { position: absolute; inset: 0; z-index: 6;
+             background: radial-gradient(ellipse 62% 40% at 50% 47%, #0B0B0B 58%, rgba(11,11,11,0) 100%); }
+  #endcard { position: absolute; inset: 0; z-index: 8; }
+  #end-mark { position: absolute; left: 380px; top: 610px; width: 320px; height: auto; }
+  #end-line { position: absolute; left: 140px; top: 860px; width: 800px; text-align: center;
+              font-weight: 700; font-size: 60px; line-height: 1.16; letter-spacing: -0.01em; }
+  #end-line .w { display: inline-block; margin: 0 0.11em; }
+  #end-btn { position: absolute; left: 355px; top: 1080px; width: 370px; height: 96px; background: #fff; color: var(--ink);
+             display: flex; align-items: center; justify-content: center; gap: 18px; font-weight: 600; font-size: 40px; }
+  #end-btn .ar { font-weight: 400; }
+</style>
+</head>
+<body>
+<div data-hf-id="hf-axet" id="root" data-composition-id="main" data-start="0" data-duration="52.8" data-width="1080" data-height="1920">
+
+  <div data-hf-id="hf-f7vp" id="studio" class="clip" data-start="31.82" data-duration="15.0" data-track-index="0"></div>
+  <canvas data-hf-id="hf-y38l" id="world" class="clip" data-start="0.0" data-duration="52.8" data-track-index="1" width="1080" height="1920"></canvas>
+  <div data-hf-id="hf-ly9o" id="whiteout" class="clip" data-start="12.588" data-duration="1.779" data-track-index="2"></div>
+
+  <!-- shot 7: interception diagram -->
+  <div data-hf-id="hf-ddhb" id="diagram" class="clip" data-start="27.58" data-duration="4.24" data-track-index="3">
+    <svg data-hf-id="hf-gb7t" viewBox="0 0 1080 1920" aria-hidden="true">
+      <defs data-hf-id="hf-mh0t">
+        <mask data-hf-id="hf-v780" id="grey-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920">
+          <path data-hf-id="hf-k9tn" id="grey-reveal" fill="none" stroke="#fff" stroke-width="16" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" />
+        </mask>
+      </defs>
+      <line data-hf-id="hf-ttg2" x1="44" y1="0" x2="44" y2="1920" stroke="#2E2E2E" stroke-width="2" />
+      <path data-hf-id="hf-fcy8" id="grey-path" fill="none" stroke="#909090" stroke-width="5" stroke-dasharray="16 13" mask="url(#grey-mask)" />
+      <path data-hf-id="hf-t9b4" id="red-path" fill="none" stroke="#FF2B2B" stroke-width="7" stroke-linecap="butt" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" />
+      <polygon data-hf-id="hf-jzoa" id="grey-head" points="0,-22 13,12 -13,12" fill="#909090" />
+      <g data-hf-id="hf-w77v" id="red-head"><polygon data-hf-id="hf-ojxs" points="0,26 12,-6 12,-20 -12,-20 -12,-6" fill="#FFFFFF" /></g>
+      <g data-hf-id="hf-s1z0" id="lab-int" opacity="0">
+        <polyline data-hf-id="hf-0a89" id="lab-int-br" fill="none" stroke="#FFFFFF" stroke-width="2" />
+        <text data-hf-id="hf-xisg" id="lab-int-tx" class="dlabel" text-anchor="end">Interceptor</text>
+      </g>
+      <g data-hf-id="hf-xfz9" id="lab-pay" opacity="0">
+        <polyline data-hf-id="hf-9r0y" id="lab-pay-br" fill="none" stroke="#FFFFFF" stroke-width="2" />
+        <text data-hf-id="hf-7zhd" id="lab-pay-tx" class="dlabel">Lykos Payload</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- leader lines for the tags (positions set each frame from the 3D anchors) -->
+  <svg data-hf-id="hf-gpwb" id="leaders" class="clip" data-start="0.0" data-duration="52.8" data-track-index="4" viewBox="0 0 1080 1920" aria-hidden="true">
+    <line data-hf-id="hf-mv0f" id="ld-pay" stroke="#fff" stroke-width="2" opacity="0" />
+    <rect data-hf-id="hf-cang" id="dot-pay" width="12" height="12" fill="#fff" opacity="0" />
+    <line data-hf-id="hf-4pv4" id="ld-fuel" stroke="#FFFFFF" stroke-width="2" opacity="0" />
+    <rect data-hf-id="hf-tb91" id="dot-fuel" width="12" height="12" fill="#FFFFFF" opacity="0" />
+  </svg>
+  <div data-hf-id="hf-gehz" id="tag-pay" class="clip tagwrap" data-start="19.948" data-duration="1.412" data-track-index="5">
+    <div data-hf-id="hf-gz8p" class="tag inv"><span data-hf-id="hf-lvq3" class="tx">7 Independent Payloads</span><span data-hf-id="hf-08ha" class="ar">→</span></div>
+  </div>
+  <div data-hf-id="hf-0sqy" id="tag-fuel" class="clip tagwrap" data-start="34.6" data-duration="1.477" data-track-index="5">
+    <div data-hf-id="hf-og20" class="tag"><span data-hf-id="hf-eb24" class="tx">Solid Fuel</span><span data-hf-id="hf-wliq" class="ar">→</span></div>
+  </div>
+
+  <!-- lead lines (Draft 3 copy, Title Case) -->
+  <div data-hf-id="hf-qco4" id="l1" class="clip lead" data-start="1.15" data-duration="3.99" data-track-index="6"><div data-hf-id="hf-sz59" class="in"><span data-hf-id="hf-158m" class="w">Introducing</span><span data-hf-id="hf-9o0j" class="w">the</span><span data-hf-id="hf-frrq" class="w">New</span><span data-hf-id="hf-tu8w" class="w">Missile</span><span data-hf-id="hf-jgko" class="w">from</span><span data-hf-id="hf-phgg" class="w">WOLFx</span></div></div>
+  <div data-hf-id="hf-wnxn" id="l2" class="clip lead" data-start="5.45" data-duration="3.85" data-track-index="6"><div data-hf-id="hf-1v35" class="in"><span data-hf-id="hf-gnlk" class="w">Built</span><span data-hf-id="hf-z575" class="w">to</span><span data-hf-id="hf-gziz" class="w">Launch</span><span data-hf-id="hf-a080" class="w">from</span><span data-hf-id="hf-8b9l" class="w">Anywhere</span></div></div>
+  <div data-hf-id="hf-dxl1" id="l3" class="clip lead" data-start="9.55" data-duration="3.85" data-track-index="6"><div data-hf-id="hf-3208" class="in"><span data-hf-id="hf-ny80" class="w">Three</span><span data-hf-id="hf-ligf" class="w">Stages</span><span data-hf-id="hf-u3an" class="w">Carry</span><span data-hf-id="hf-ehbp" class="w">It</span><span data-hf-id="hf-53t1" class="w">to</span><span data-hf-id="hf-a028" class="w">Orbit</span><span data-hf-id="hf-gpzr" class="w">in</span><span data-hf-id="hf-5sfd" class="w">Minutes</span></div></div>
+  <div data-hf-id="hf-9i3v" id="l4a" class="clip lead dark" data-start="13.85" data-duration="4.6" data-track-index="6"><div data-hf-id="hf-2np7" class="in"><span data-hf-id="hf-bnfr" class="w">Then</span><span data-hf-id="hf-os4p" class="w">It</span><span data-hf-id="hf-e84s" class="w">Turns</span><span data-hf-id="hf-difl" class="w">and</span><span data-hf-id="hf-dxmb" class="w">Dives</span><span data-hf-id="hf-xtml" class="w">at</span><span data-hf-id="hf-ob6i" class="w">Hypersonic</span><span data-hf-id="hf-dafn" class="w">Speed</span></div></div>
+  <div data-hf-id="hf-kwgk" id="l4b" class="clip lead dark" data-start="18.35" data-duration="3.07" data-track-index="6"><div data-hf-id="hf-0o62" class="in"><span data-hf-id="hf-ys6r" class="w">The</span><span data-hf-id="hf-8gyz" class="w">Nose</span><span data-hf-id="hf-y8jt" class="w">Opens</span><span data-hf-id="hf-mx6p" class="w">on</span><span data-hf-id="hf-fgfx" class="w">Seven</span><span data-hf-id="hf-odfz" class="w">Payloads</span></div></div>
+  <div data-hf-id="hf-e6fq" id="l5" class="clip lead" data-start="21.45" data-duration="2.75" data-track-index="6"><div data-hf-id="hf-09v1" class="in"><span data-hf-id="hf-20ep" class="w">Each</span><span data-hf-id="hf-iogc" class="w">One</span><span data-hf-id="hf-15q6" class="w">Steers</span><span data-hf-id="hf-6aq4" class="w">to</span><span data-hf-id="hf-zj1u" class="w">Its</span><span data-hf-id="hf-1neg" class="w">Own</span><span data-hf-id="hf-5mqp" class="w">Target</span></div></div>
+  <div data-hf-id="hf-e992" id="l6" class="clip lead" data-start="24.2" data-duration="3.48" data-track-index="6"><div data-hf-id="hf-1gs4" class="in"><span data-hf-id="hf-q6bz" class="w">Small</span><span data-hf-id="hf-0g82" class="w">Thrusters</span><span data-hf-id="hf-d7dp" class="w">Let</span><span data-hf-id="hf-pz1s" class="w">It</span><span data-hf-id="hf-vvcg" class="w">Change</span><span data-hf-id="hf-8lrh" class="w">Course</span><span data-hf-id="hf-0lrs" class="w">as</span><span data-hf-id="hf-pkqr" class="w">It</span><span data-hf-id="hf-mos6" class="w">Falls</span></div></div>
+  <div data-hf-id="hf-kvn7" id="l7" class="clip lead" data-start="27.8" data-duration="4.05" data-track-index="6"><div data-hf-id="hf-12h3" class="in"><span data-hf-id="hf-y0om" class="w">Its</span><span data-hf-id="hf-k4q9" class="w">Weaving</span><span data-hf-id="hf-04en" class="w">Path</span><span data-hf-id="hf-h9gw" class="w">Is</span><span data-hf-id="hf-6pn4" class="w">Built</span><span data-hf-id="hf-5wf3" class="w">to</span><span data-hf-id="hf-fe8e" class="w">Slip</span><span data-hf-id="hf-helg" class="w">Past</span><span data-hf-id="hf-kszs" class="w">Interceptors</span></div></div>
+  <div data-hf-id="hf-f68c" id="l8" class="clip lead narrow" data-start="32.05" data-duration="7.65" data-track-index="6"><div data-hf-id="hf-5fue" class="in"><span data-hf-id="hf-kfy8" class="w">Open</span><span data-hf-id="hf-nl7m" class="w">It</span><span data-hf-id="hf-rzkd" class="w">Up:</span><span data-hf-id="hf-rsag" class="w">Three</span><span data-hf-id="hf-owr3" class="w">Stages</span><span data-hf-id="hf-z211" class="w">and</span><span data-hf-id="hf-m429" class="w">Seven</span><span data-hf-id="hf-avqn" class="w">Payloads</span></div></div>
+  <div data-hf-id="hf-8oo7" id="l9" class="clip lead narrow" data-start="43.7" data-duration="3.15" data-track-index="6"><div data-hf-id="hf-51jd" class="in"><span data-hf-id="hf-2vvy" class="w">Lykos</span><span data-hf-id="hf-d5sb" class="w">Wx-1,</span><span data-hf-id="hf-wl2s" class="w">Engineered</span><span data-hf-id="hf-2ynp" class="w">by</span><span data-hf-id="hf-5i1k" class="w">WOLFx</span></div></div>
+
+  <div data-hf-id="hf-j718" id="pills" class="clip" data-start="44.9" data-duration="1.92" data-track-index="7">
+    <div data-hf-id="hf-thy4" class="row"><span data-hf-id="hf-7fxj" class="pill" id="p1">3 Stages</span><span data-hf-id="hf-7ud1" class="pill" id="p2">Solid Fuel</span></div>
+    <div data-hf-id="hf-lt04" class="row"><span data-hf-id="hf-6hu7" class="pill" id="p3">Hypersonic</span><span data-hf-id="hf-v2vy" class="pill" id="p4">7 Payloads</span></div>
+  </div>
+
+  <!-- end card (pack default): wordmark, closing line, wolfx.io -->
+  <div data-hf-id="hf-06p6" id="endmask" class="clip" data-start="46.82" data-duration="5.98" data-track-index="3"></div>
+  <div data-hf-id="hf-d7zx" id="endcard" class="clip" data-start="46.82" data-duration="5.98" data-track-index="8">
+    <img data-hf-id="hf-jemh" id="end-mark" src="assets/logo/wolfx-wordmark-white-interim.png" alt="WOLFx">
+    <div data-hf-id="hf-kbl7" id="end-line"><span data-hf-id="hf-683r" class="w">Let's</span><span data-hf-id="hf-oysi" class="w">Make</span><span data-hf-id="hf-7bm4" class="w">Something</span><span data-hf-id="hf-0qv1" class="w">Great</span><span data-hf-id="hf-0f2k" class="w">Together.</span></div>
+    <div data-hf-id="hf-pwtf" id="end-btn"><span data-hf-id="hf-6dbf">wolfx.io</span><span data-hf-id="hf-wztr" class="ar">→</span></div>
+  </div>
+
+  <!-- soundtrack from tools/make_audio.py (reads cues.json); run `npm run audio` before preview/render -->
+  <audio data-hf-id="hf-8xzu" id="mix" src="assets/audio.wav" data-start="0" data-duration="52.8" data-volume="1" data-track-index="9"></audio>
+</div>
+
+<script>
+/* ---------- the timeline: one linear clock drives the 3D world; GSAP tweens drive the type ---------- */
+(function () {
+  var D = 52.8;
+  // voice-over timing map, [design second, film second]: the shots were designed on a 70 s grid,
+  // and the film follows the voice-over (assets/vo_words_film.json)
+  var MAP = [[0, 0], [6, 5.14], [12, 9.26], [18, 13.42], [24, 19.1], [28, 21.36], [32, 24.12], [38, 27.58], [46, 31.82], [49, 33.3], [50, 34.6], [56, 40.14], [57, 40.76], [60, 43.48], [64, 46.82], [70, 52.8]];
+  function toDesign(T) { for (var i = 0; i < MAP.length - 1; i++) { var a = MAP[i], b = MAP[i + 1]; if (T <= b[1]) return a[0] + (T - a[1]) / (b[1] - a[1]) * (b[0] - a[0]); } return MAP[MAP.length - 1][0]; }
+  var host = { render: null, clock: { t: 0 } };
+  window.__lykos = host;
+  window.__hf = window.__hf || {};
+  window.__hf.buildReady = window.__hf.buildReady || {};
+  window.__hf.buildReady["world"] = new Promise(function (res) { host.ready = res; });
+
+gsap.set("#leaders", { z: 30, transformPerspective: 1920, rotationX: 10, rotationY: -15 });
+  var tl = gsap.timeline({ paused: true });
+  tl.to(host.clock, { t: D, duration: D, ease: "none",
+    onUpdate: function () { if (host.render) host.render(toDesign(host.clock.t)); } }, 0);
+  host.toDesign = toDesign;
+
+  // lead lines: words step in one at a time (like wolfx.io), the line leaves as one
+  function lead(id, tIn, step, tOut) {
+    var ws = document.querySelectorAll("#" + id + " .w");
+    for (var i = 0; i < ws.length; i++) {
+      tl.fromTo(ws[i], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, tIn + i * step);
+    }
+    tl.fromTo("#" + id + " .in", { opacity: 1 }, { opacity: 0, duration: 0.25, ease: "power2.in" }, tOut);
+  }
+  lead("l1", 1.2, 0.15, 4.84);
+  lead("l2", 5.5, 0.12, 9.0);
+  lead("l3", 9.6, 0.1, 13.1);
+  lead("l4a", 13.9, 0.1, 18.15);
+  lead("l4b", 18.4, 0.1, 21.12);
+  lead("l5", 21.5, 0.09, 23.9);
+  lead("l6", 24.25, 0.08, 27.38);
+  lead("l7", 27.85, 0.1, 31.55);
+  lead("l8", 32.1, 0.1, 39.4);
+  lead("l9", 43.75, 0.12, 46.55);
+
+  // tags: the bar wipes in, then the words appear
+  function tag(id, t0, tOut) {
+    tl.fromTo("#" + id + " .tag", { clipPath: "inset(0 100% 0 0)", opacity: 1 },
+      { clipPath: "inset(0 0% 0 0)", duration: 0.25, ease: "power2.out" }, t0);
+    tl.fromTo("#" + id + " .tx, #" + id + " .ar", { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "none" }, t0 + 0.22);
+    tl.to("#" + id + " .tag", { opacity: 0, duration: 0.2, ease: "power2.in" }, tOut);
+  }
+  tag("tag-pay", 19.948, 21.191);
+  tag("tag-fuel", 34.6, 35.8);
+
+  // closing spec pills land on the quarter-beats
+  ["#p1", "#p2", "#p3", "#p4"].forEach(function (p, i) {
+    tl.fromTo(p, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }, 44.941 + i * 0.21);
+  });
+  tl.fromTo("#pills .row", { opacity: 1 }, { opacity: 0, duration: 0.25, ease: "power2.in" }, 46.57);
+
+  // end card: the mark wipes in, the line builds, the button lands
+  tl.fromTo("#end-mark", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "power3.out" }, 46.82);
+  var ew = document.querySelectorAll("#end-line .w");
+  for (var j = 0; j < ew.length; j++) {
+    tl.fromTo(ew[j], { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 47.418 + j * 0.16);
+  }
+  tl.fromTo("#end-btn", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.3, ease: "power2.out" }, 48.813);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = tl;
+})();
+</script>
+
+<script>
+/* ---------- the 3D world: everything below is a pure function of t ---------- */
+(async function () {
+  var host = window.__lykos;
+  await Promise.all([500, 600, 700, 800].map(function (w) { return document.fonts.load(w + ' 100px "Poppins"'); }));
+  function loadImg(src) { return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im); }; im.onerror = rej; im.src = src; }); }
+  var wxImg = await loadImg("assets/logo/wolfx-monogram-wx-white.png");
+
+  var V3 = THREE.Vector3;
+  var PI = Math.PI;
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function seg(t, a, b) { return clamp01((t - a) / (b - a)); }
+  function eio(x) { x = clamp01(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function eo(x) { x = clamp01(x); return 1 - Math.pow(1 - x, 3); }
+  function ei(x) { x = clamp01(x); return x * x * x; }
+  function mix(a, b, k) { return a + (b - a) * k; }
+  function mixV(a, b, k) { return new V3(mix(a.x, b.x, k), mix(a.y, b.y, k), mix(a.z, b.z, k)); }
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  THREE.ColorManagement.legacyMode = false;
+  var canvas = document.getElementById("world");
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(1);
+  renderer.setSize(1080, 1920, false);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.localClippingEnabled = true;
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, 1080 / 1920, 0.1, 3000);
+  var WHITE = new THREE.Color(0x0b0b0b), DARK = new THREE.Color(0x070707); // WHITE = the ground colour (now night)
+  var fogWhite = new THREE.Fog(0x0b0b0b, 45, 150), fogDark = new THREE.Fog(0x070707, 25, 150);
+
+  // light: warm key, cool rim, soft sky fill (hyperframes types/3d.md)
+  scene.add(new THREE.HemisphereLight(0xb9c3cd, 0x101010, 0.75));
+  var key = new THREE.DirectionalLight(0xffeedd, 3.4); key.position.set(-8, 14, 11); scene.add(key);
+  var rim = new THREE.DirectionalLight(0xd6e4ff, 3.8); rim.position.set(11, 6, -12); scene.add(rim);
+
+  var M = {
+    ink: new THREE.MeshStandardMaterial({ color: 0x3b3f44, roughness: 0.38, metalness: 0.45 }),
+    ink2: new THREE.MeshStandardMaterial({ color: 0x25282c, roughness: 0.5, metalness: 0.4 }),
+    band: new THREE.MeshStandardMaterial({ color: 0x5c6066, roughness: 0.4, metalness: 0.5 }),
+    hair: new THREE.MeshBasicMaterial({ color: 0x9c9c9c }),
+    fuel: new THREE.MeshStandardMaterial({ color: 0x8c8c8c, roughness: 0.95, metalness: 0 }),
+    fuelBand: new THREE.MeshBasicMaterial({ color: 0x5e5e5e }),
+    red: new THREE.MeshBasicMaterial({ color: 0xff2b2b, side: THREE.DoubleSide }),
+    inkFlat: new THREE.MeshBasicMaterial({ color: 0xf0f0f0 })
+  };
+  function cyl(rt, rb, h, seg_, open, ts, tlen, mat) {
+    return new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg_ || 48, 1, !!open, ts || 0, tlen || PI * 2), mat);
+  }
+  function orientBetween(mesh, a, b) {
+    var d = new V3().subVectors(b, a); var len = d.length();
+    mesh.position.copy(a).addScaledVector(d, 0.5);
+    mesh.scale.set(1, Math.max(len, 0.0001), 1);
+    if (len > 0) mesh.quaternion.setFromUnitVectors(new V3(0, 1, 0), d.normalize());
+  }
+
+  /* ---------- text on canvases: 3D words, floor label, body stencils ---------- */
+  function makeWord(lines, o) {
+    o = o || {};
+    var weight = o.weight || 800, px = o.px || 200, color = o.color || "#FFFFFF", lh = px * (o.lh || 1.08), pad = Math.round(px * 0.25);
+    if (typeof lines === "string") lines = [lines];
+    var c = document.createElement("canvas"), ctx = c.getContext("2d");
+    ctx.font = weight + " " + px + "px Poppins";
+    var widths = lines.map(function (l) { return ctx.measureText(l).width; });
+    c.width = Math.ceil(Math.max.apply(null, widths) + pad * 2);
+    c.height = Math.ceil(lh * lines.length + pad * 2);
+    var chars = [], rnd = mulberry32(o.seed || 7);
+    lines.forEach(function (l, li) {
+      var x0 = o.align === "center" ? (c.width - widths[li]) / 2 : pad;
+      for (var i = 0; i < l.length; i++) {
+        ctx.font = weight + " " + px + "px Poppins";
+        var x = x0 + ctx.measureText(l.slice(0, i)).width, w = ctx.measureText(l[i]).width;
+        chars.push({ ch: l[i], x: x, w: w, y: pad + lh * li + px * 0.92, d: rnd() * 0.2, line: li });
+      }
+    });
+    var tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 8;
+    var mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide, fog: false, toneMapped: false });
+    var h = o.height || 1;
+    var mesh = new THREE.Mesh(new THREE.PlaneGeometry(h * c.width / c.height, h), mat);
+    mesh.renderOrder = 10;
+    var last = "";
+    // mode "frag": letters assemble from split fragments; mode "type": typewriter
+    function draw(t, t0, tOut, mode) {
+      var state = [];
+      for (var i = 0; i < chars.length; i++) {
+        var a;
+        if (mode === "type") a = (t - t0) / (o.typeDur || 0.8) * chars.length >= i + 1 ? 1 : 0;
+        else a = eo((t - t0 - chars[i].d) / 0.18);
+        if (tOut != null) a *= 1 - eo((t - tOut - chars[i].d * 0.5) / 0.16);
+        state.push(Math.round(a * 40));
+      }
+      var k = state.join(",");
+      if (k === last) return; last = k;
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.font = weight + " " + px + "px Poppins"; ctx.fillStyle = color; ctx.textBaseline = "alphabetic";
+      for (var j = 0; j < chars.length; j++) {
+        var al = state[j] / 40, ch = chars[j], co = (o.colors && o.colors[ch.line]) || color;
+        if (al <= 0) continue;
+        ctx.fillStyle = co;
+        if (mode === "type" || al >= 1) { ctx.globalAlpha = al; ctx.fillText(ch.ch, ch.x, ch.y); continue; }
+        var off = (1 - al) * px * 0.22, top = ch.y - px * 0.95, mid = ch.y - px * 0.38;
+        ctx.globalAlpha = al;
+        ctx.save(); ctx.beginPath(); ctx.rect(ch.x - px, top, ch.w + px * 2, mid - top); ctx.clip(); ctx.fillText(ch.ch, ch.x - off, ch.y); ctx.restore();
+        ctx.save(); ctx.beginPath(); ctx.rect(ch.x - px, mid, ch.w + px * 2, px * 1.3); ctx.clip(); ctx.fillText(ch.ch, ch.x + off, ch.y + off * 0.25); ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+      tex.needsUpdate = true;
+    }
+    return { mesh: mesh, draw: draw, aspect: c.width / c.height, height: h };
+  }
+  function stencilTexture(text, px, w, h) { // white text along the body axis
+    var c = document.createElement("canvas"); c.width = w; c.height = h;
+    var ctx = c.getContext("2d"); ctx.translate(w / 2, h / 2); ctx.rotate(-PI / 2);
+    ctx.font = "700 " + px + "px Poppins"; ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(text, 0, 0);
+    var tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 8; return tex;
+  }
+  function radialTexture(stops) {
+    var c = document.createElement("canvas"); c.width = c.height = 256; var ctx = c.getContext("2d");
+    var g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+    stops.forEach(function (s) { g.addColorStop(s[0], s[1]); });
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 256, 256);
+    var tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; return tex;
+  }
+  var shadowTex = radialTexture([[0, "rgba(18,18,18,0.42)"], [0.5, "rgba(18,18,18,0.18)"], [1, "rgba(18,18,18,0)"]]);
+  var smokeTex = radialTexture([[0, "rgba(255,255,255,1)"], [0.45, "rgba(255,255,255,0.75)"], [1, "rgba(255,255,255,0)"]]);
+  function contactShadow(w, d) {
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, fog: false }));
+    m.rotation.x = -PI / 2; m.renderOrder = 1; scene.add(m); return m;
+  }
+
+  /* ---------- line fields: floor grid and topographic contours (fade by reveal radius, distance and depth) ---------- */
+  var lineVS = [
+    "uniform vec3 uCenter; uniform float uWaveR, uWaveAmp, uWaveW;",
+    "varying vec3 vW; varying float vDepth;",
+    "void main(){ vec4 w = modelMatrix * vec4(position,1.0);",
+    "  float r = length(w.xz - uCenter.xz);",
+    "  w.y += uWaveAmp * exp(-pow((r - uWaveR) / uWaveW, 2.0));",
+    "  vW = w.xyz; vec4 mv = viewMatrix * w; vDepth = -mv.z; gl_Position = projectionMatrix * mv; }"
+  ].join("\n");
+  var lineFS = [
+    "uniform vec3 uColor, uCenter; uniform float uAlpha, uReveal, uRadius, uNear, uFar;",
+    "varying vec3 vW; varying float vDepth;",
+    "void main(){ float r = length(vW.xz - uCenter.xz);",
+    "  float rev = 1.0 - smoothstep(uReveal - 6.0, uReveal, r);",
+    "  float rad = 1.0 - smoothstep(uRadius * 0.55, uRadius, r);",
+    "  float fog = 1.0 - smoothstep(uNear, uFar, vDepth);",
+    "  float a = uAlpha * rev * rad * fog; if (a < 0.004) discard;",
+    "  gl_FragColor = vec4(uColor, a); }"
+  ].join("\n");
+  function srgb(hex) { return new V3(((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255); }
+  function lineMat(hex, alpha) {
+    return new THREE.ShaderMaterial({
+      vertexShader: lineVS, fragmentShader: lineFS, transparent: true, depthWrite: false,
+      uniforms: { uColor: { value: srgb(hex) }, uAlpha: { value: alpha }, uCenter: { value: new V3() }, uReveal: { value: 1e4 },
+        uRadius: { value: 1e4 }, uNear: { value: 1e4 }, uFar: { value: 2e4 }, uWaveR: { value: -100 }, uWaveAmp: { value: 0 }, uWaveW: { value: 4 } }
+    });
+  }
+  function gridLines(size, step, hex, alpha) {
+    var p = [];
+    for (var v = -size; v <= size + 1e-6; v += step) { p.push(-size, 0, v, size, 0, v, v, 0, -size, v, 0, size); }
+    var g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(p, 3));
+    var m = new THREE.LineSegments(g, lineMat(hex, alpha)); m.frustumCulled = false; scene.add(m); return m;
+  }
+  // value noise -> marching squares contour lines (the wolfx.io / banner topography)
+  function buildContours() {
+    var rnd = mulberry32(2019);
+    var perm = []; for (var i = 0; i < 512; i++) perm.push(rnd());
+    function h(i, j) { return perm[((i * 73856093) ^ (j * 19349663)) >>> 0 & 511]; }
+    function vn(x, y) {
+      var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+      var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+      return mix(mix(h(xi, yi), h(xi + 1, yi), u), mix(h(xi, yi + 1), h(xi + 1, yi + 1), u), v);
+    }
+    function f(x, z) {
+      var wx = x + 9 * vn(x * 0.02 + 3, z * 0.02 - 7), wz = z + 9 * vn(x * 0.02 - 11, z * 0.02 + 5);
+      return 0.58 * vn(wx * 0.03, wz * 0.03) + 0.28 * vn(wx * 0.07 + 10, wz * 0.07 - 4) + 0.14 * vn(wx * 0.15, wz * 0.15) + 0.0018 * (wx - wz);
+    }
+    var N = 190, S = 95, cell = (2 * S) / N, vals = [];
+    for (var j = 0; j <= N; j++) for (var i2 = 0; i2 <= N; i2++) vals.push(f(-S + i2 * cell, -S + j * cell));
+    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), pos = [];
+    var LEV = 15;
+    for (var L = 1; L < LEV; L++) {
+      var lv = mn + (mx - mn) * L / LEV;
+      for (var jj = 0; jj < N; jj++) for (var ii = 0; ii < N; ii++) {
+        var a = vals[jj * (N + 1) + ii], b = vals[jj * (N + 1) + ii + 1], c = vals[(jj + 1) * (N + 1) + ii + 1], d = vals[(jj + 1) * (N + 1) + ii];
+        var x0 = -S + ii * cell, z0 = -S + jj * cell, pts = [];
+        function edge(p, q, xa, za, xb, zb) { if ((p < lv) !== (q < lv)) { var k = (lv - p) / (q - p); pts.push([xa + (xb - xa) * k, za + (zb - za) * k]); } }
+        edge(a, b, x0, z0, x0 + cell, z0); edge(b, c, x0 + cell, z0, x0 + cell, z0 + cell);
+        edge(c, d, x0 + cell, z0 + cell, x0, z0 + cell); edge(d, a, x0, z0 + cell, x0, z0);
+        for (var q = 0; q + 1 < pts.length; q += 2) pos.push(pts[q][0], 0.02, pts[q][1], pts[q + 1][0], 0.02, pts[q + 1][1]);
+      }
+    }
+    var g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    var m = new THREE.LineSegments(g, lineMat(0x5e5e5e, 1.0)); m.frustumCulled = false; scene.add(m); return m;
+  }
+  var contours = buildContours();
+  var gridW = gridLines(120, 2, 0x242424, 1.0);
+  var gridStudio = gridLines(40, 1, 0x2e2e2e, 1.0);
+  var gridDark = gridLines(240, 4, 0x1f1f1f, 1.0);
+
+  /* ---------- Lykos Wx-1 (model space: Y up, base at y = 0, 12 units tall) ---------- */
+  function buildPod(mat) {
+    var g = new THREE.Group();
+    var cone = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.62, 28), mat); cone.position.y = 0.14 + 0.31; g.add(cone);
+    var base = cyl(0.12, 0.12, 0.14, 28, false, 0, 0, mat); base.position.y = 0.07; g.add(base);
+    var ring = cyl(0.123, 0.123, 0.012, 28, true, 0, 0, M.hair); ring.position.y = 0.14; g.add(ring);
+    return g;
+  }
+  var missile = new THREE.Group(); scene.add(missile);
+  var s1 = new THREE.Group(); missile.add(s1);
+  var shell1 = cyl(0.62, 0.62, 4.25, 48, true, PI * 0.25, PI * 1.5, M.ink); shell1.position.y = 0.35 + 2.125; s1.add(shell1);
+  var panelMat = M.ink.clone(); panelMat.transparent = true;
+  var panel = cyl(0.62, 0.62, 4.25, 16, true, -PI * 0.25, PI * 0.5, panelMat); panel.position.y = 0.35 + 2.125; s1.add(panel);
+  var fuel = cyl(0.58, 0.58, 4.2, 40, false, 0, 0, M.fuel); fuel.position.y = 0.35 + 2.125; s1.add(fuel);
+  for (var fb = 0; fb < 7; fb++) { var bnd = cyl(0.583, 0.583, 0.018, 40, true, 0, 0, M.fuelBand); bnd.position.y = 0.7 + fb * 0.55; s1.add(bnd); }
+  var cap1 = new THREE.Mesh(new THREE.CircleGeometry(0.62, 48), M.ink2); cap1.rotation.x = PI / 2; cap1.position.y = 0.35; s1.add(cap1);
+  var noz1 = cyl(0.42, 0.55, 0.36, 40, false, 0, 0, M.ink2); noz1.position.y = 0.18; s1.add(noz1);
+  var finShape = new THREE.Shape(); finShape.moveTo(0.6, 0.35); finShape.lineTo(1.3, 0.35); finShape.lineTo(1.3, 0.66); finShape.lineTo(0.6, 1.8); finShape.closePath();
+  var finGeo = new THREE.ExtrudeGeometry(finShape, { depth: 0.06, bevelEnabled: false }); finGeo.translate(0, 0, -0.03);
+  for (var fi = 0; fi < 4; fi++) { var fin = new THREE.Mesh(finGeo, M.ink); fin.rotation.y = PI / 4 + fi * PI / 2; s1.add(fin); }
+  var ist1 = cyl(0.6, 0.6, 0.15, 48, false, 0, 0, M.band); ist1.position.y = 4.675; s1.add(ist1);
+  var flame1 = new THREE.Group(); s1.add(flame1);
+
+  var s2 = new THREE.Group(); s2.position.y = 4.75; missile.add(s2);
+  var shell2 = cyl(0.58, 0.58, 3.5, 48, false, 0, 0, M.ink); shell2.position.y = 1.75; s2.add(shell2);
+  [0.55, 2.95].forEach(function (y) { var r = cyl(0.584, 0.584, 0.022, 48, true, 0, 0, M.hair); r.position.y = y; s2.add(r); });
+  var stTex = stencilTexture("LYKOS  Wx-1", 120, 200, 1100);
+  var stencil = new THREE.Mesh(new THREE.CylinderGeometry(0.585, 0.585, 2.1, 24, 1, true, -0.19, 0.38),
+    new THREE.MeshBasicMaterial({ map: stTex, transparent: true, depthWrite: false }));
+  stencil.position.y = 1.75; s2.add(stencil);
+  var noz2 = cyl(0.34, 0.46, 0.3, 40, false, 0, 0, M.ink2); noz2.position.y = -0.15; s2.add(noz2);
+  var ist2 = cyl(0.56, 0.56, 0.15, 48, false, 0, 0, M.band); ist2.position.y = 3.575; s2.add(ist2);
+  var flame2 = new THREE.Group(); flame2.position.y = -0.3; s2.add(flame2);
+
+  var s3 = new THREE.Group(); s3.position.y = 8.4; missile.add(s3);
+  var shell3 = cyl(0.55, 0.55, 1.6, 48, false, 0, 0, M.ink); shell3.position.y = 0.8; s3.add(shell3);
+  var ring3 = cyl(0.554, 0.554, 0.022, 48, true, 0, 0, M.hair); ring3.position.y = 1.42; s3.add(ring3);
+  var wxTex = new THREE.CanvasTexture((function () {
+    var c = document.createElement("canvas"); c.width = 256; c.height = 256; var ctx = c.getContext("2d");
+    ctx.translate(128, 128); ctx.rotate(-PI / 2); ctx.drawImage(wxImg, -112, -107, 224, 214); return c; })());
+  wxTex.encoding = THREE.sRGBEncoding;
+  var wxDecal = new THREE.Mesh(new THREE.CylinderGeometry(0.556, 0.556, 0.62, 24, 1, true, -0.56, 1.12),
+    new THREE.MeshBasicMaterial({ map: wxTex, transparent: true, depthWrite: false }));
+  wxDecal.position.y = 0.72; s3.add(wxDecal);
+  var noz3 = cyl(0.3, 0.4, 0.24, 40, false, 0, 0, M.ink2); noz3.position.y = -0.12; s3.add(noz3);
+
+  var nose = new THREE.Group(); nose.position.y = 10.0; missile.add(nose);
+  var busDisc = cyl(0.5, 0.5, 0.12, 40, false, 0, 0, M.band); busDisc.position.y = 0.06; nose.add(busDisc);
+  var pods = [];
+  for (var pi_ = 0; pi_ < 7; pi_++) {
+    var pod = buildPod(M.ink);
+    if (pi_ > 0) { var ang = (pi_ - 1) * PI / 3; pod.position.set(Math.cos(ang) * 0.3, 0.12, Math.sin(ang) * 0.3); } else pod.position.y = 0.12;
+    nose.add(pod); pods.push(pod);
+  }
+  var prof = [], profLo = [];
+  for (var k = 0; k <= 24; k++) { var y = 2.0 * k / 24; prof.push(new THREE.Vector2(Math.max(0.02, 0.55 * Math.pow(Math.max(0, 1 - Math.pow(y / 2.03, 1.7)), 0.62)), y)); }
+  for (var k2 = 0; k2 <= 9; k2++) { var y2 = 2.0 * k2 / 9; profLo.push(new THREE.Vector2(Math.max(0.02, 0.556 * Math.pow(Math.max(0, 1 - Math.pow(y2 / 2.03, 1.7)), 0.62)), y2)); }
+  var fairMat = M.ink.clone(); fairMat.side = THREE.DoubleSide;
+  var pivA = new THREE.Group(); pivA.position.set(0.55, 0, 0); nose.add(pivA);
+  var fairA = new THREE.Mesh(new THREE.LatheGeometry(prof, 32, 0, PI), fairMat); fairA.position.x = -0.55; pivA.add(fairA);
+  var pivB = new THREE.Group(); pivB.position.set(-0.55, 0, 0); nose.add(pivB);
+  var fairB = new THREE.Mesh(new THREE.LatheGeometry(prof, 32, PI, PI), fairMat); fairB.position.x = 0.55; pivB.add(fairB);
+  var scanPlane = new THREE.Plane(new V3(0, 1, 0), 0);
+  var scanWire = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.LatheGeometry(profLo, 16, 0, PI * 2)),
+    new THREE.LineBasicMaterial({ color: 0x909090, transparent: true, clippingPlanes: [scanPlane] }));
+  nose.add(scanWire);
+
+  function makeFlame(scale) {
+    var g = new THREE.Group();
+    var outer = new THREE.Mesh(new THREE.ConeGeometry(0.42, 2.6, 28, 1, true), new THREE.MeshBasicMaterial({ color: 0xff7a2e, transparent: true, opacity: 0.9, depthWrite: false, side: THREE.DoubleSide }));
+    outer.rotation.x = PI; outer.position.y = -1.3;
+    var inner = new THREE.Mesh(new THREE.ConeGeometry(0.24, 1.5, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0xffe2b8, transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide }));
+    inner.rotation.x = PI; inner.position.y = -0.75;
+    g.add(outer); g.add(inner); g.scale.setScalar(scale); g.userData.cones = [outer, inner]; return g;
+  }
+  var f1 = makeFlame(1.0); flame1.add(f1);
+  var f2 = makeFlame(0.85); flame2.add(f2);
+  function flicker(g, t, on, k) {
+    g.visible = on > 0.01;
+    var s = (0.9 + 0.08 * Math.sin(t * 47.0 + k) + 0.05 * Math.sin(t * 31.0 + 2 * k)) * on;
+    g.scale.set(on * g.userData.base, Math.max(0.001, s * g.userData.base), on * g.userData.base);
+  }
+  f1.userData.base = 1.0; f2.userData.base = 0.85;
+
+  var _e = new THREE.Euler();
+  function poseMissile(base, theta, yaw) { missile.position.copy(base); _e.set(0, yaw, theta - PI / 2, "YXZ"); missile.quaternion.setFromEuler(_e); }
+  function axisOf(obj) { return new V3(0, 1, 0).applyQuaternion(obj.quaternion); }
+  function resetMissile() {
+    s1.position.set(0, 0, 0); s1.rotation.set(0, 0, 0); s1.visible = true;
+    s2.position.set(0, 4.75, 0); s3.position.set(0, 8.4, 0); nose.position.set(0, 10.0, 0);
+    pivA.position.set(0.55, 0, 0); pivB.position.set(-0.55, 0, 0); pivA.rotation.set(0, 0, 0); pivB.rotation.set(0, 0, 0);
+    panel.position.set(0, 0.35 + 2.125, 0); panelMat.opacity = 1; panel.visible = true;
+    scanWire.visible = false; flicker(f1, 0, 0, 0); flicker(f2, 0, 0, 0);
+  }
+
+  /* ---------- the 8x8 mobile launcher (truck along +x, cab at the front) ---------- */
+  var P0 = new V3(-6.2, 2.02, 0);
+  var truck = new THREE.Group(); scene.add(truck);
+  var tMatA = new THREE.MeshStandardMaterial({ color: 0x34383d, roughness: 0.45, metalness: 0.4, transparent: true });
+  var tMatB = new THREE.MeshStandardMaterial({ color: 0x232629, roughness: 0.6, metalness: 0.3, transparent: true });
+  var tMatW = new THREE.MeshStandardMaterial({ color: 0x5c6066, roughness: 0.35, metalness: 0.5, transparent: true });
+  var wireMat = new THREE.LineBasicMaterial({ color: 0xa8a8a8, transparent: true, clippingPlanes: [new THREE.Plane(new V3(-1, 0, 0), 100)] });
+  var truckSolids = [];
+  function tpart(geo, mat, x, y, z, parent) {
+    var m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); (parent || truck).add(m);
+    var e = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), wireMat); m.add(e);
+    truckSolids.push(m); return m;
+  }
+  tpart(new THREE.BoxGeometry(15.6, 0.5, 2.3), tMatA, 0.8, 1.0, 0);                 // chassis
+  tpart(new THREE.BoxGeometry(2.2, 1.95, 2.4), tMatA, 7.6, 2.225, 0);               // cab
+  tpart(new THREE.BoxGeometry(0.04, 0.7, 2.0), tMatW, 8.72, 2.65, 0);               // windscreen
+  tpart(new THREE.BoxGeometry(1.2, 0.6, 0.04), tMatW, 7.7, 2.7, 1.22);              // side window
+  tpart(new THREE.BoxGeometry(0.9, 0.5, 2.36), tMatB, -6.9, 1.5, 0);                // rear jack block
+  [7.0, 5.2, -3.4, -5.4].forEach(function (x) {
+    [1.18, -1.18].forEach(function (z) {
+      var w = tpart(new THREE.CylinderGeometry(0.62, 0.62, 0.42, 28), tMatB, x, 0.62, z); w.rotation.x = PI / 2;
+      var hub = tpart(new THREE.CylinderGeometry(0.28, 0.28, 0.44, 20), tMatW, x, 0.62, z); hub.rotation.x = PI / 2;
+    });
+  });
+  var erector = new THREE.Group(); erector.position.copy(P0); truck.add(erector);
+  tpart(new THREE.BoxGeometry(11.6, 0.12, 0.5), tMatB, 6.2, -0.7, 0, erector);      // erector rail (darker: the rim light made it glare)
+  tpart(new THREE.BoxGeometry(0.45, 0.5, 1.1), tMatB, 2.2, -0.42, 0, erector);      // cradles
+  tpart(new THREE.BoxGeometry(0.45, 0.5, 1.1), tMatB, 9.0, -0.42, 0, erector);
+  var pistons = [0.32, -0.32].map(function (z) {
+    var p = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 1, 16), tMatW); p.userData.z = z; truck.add(p); truckSolids.push(p); return p;
+  });
+  var truckShadow = contactShadow(19, 5.5);
+  var labelFloor = makeWord(["8×8 Mobile", "Launcher"], { weight: 700, px: 150, height: 2.5, seed: 11, typeDur: 0.8 });
+  labelFloor.mesh.rotation.set(-PI / 2, 0, 1.08); labelFloor.mesh.position.set(7.0, 0.03, 4.9); scene.add(labelFloor.mesh);
+
+  /* ---------- shot 1 words ---------- */
+  var wLykos = makeWord("Lykos", { weight: 800, px: 260, height: 3.4, seed: 3 });
+  var wWx = makeWord("Wx-1", { weight: 500, px: 200, height: 1.35, seed: 5, color: "#A8A8A8" });
+  scene.add(wLykos.mesh); scene.add(wWx.mesh);
+  var ruleRed = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.1), M.red); scene.add(ruleRed);
+
+  /* ---------- launch smoke ---------- */
+  var smoke = [];
+  (function () {
+    var rnd = mulberry32(77);
+    for (var i = 0; i < 150; i++) {
+      var mat = new THREE.SpriteMaterial({ map: smokeTex, color: new THREE.Color().setHSL(0, 0, 0.3 + rnd() * 0.16), transparent: true, depthWrite: false, fog: false });
+      var sp = new THREE.Sprite(mat); scene.add(sp);
+      smoke.push({ sp: sp, b: 14.0 + rnd() * 3.3, a: rnd() * PI * 2, v: 5 + rnd() * 9, col: rnd() < 0.42, j: rnd(), s: 1.5 + rnd() * 2.5 });
+    }
+  })();
+
+  /* ---------- space: speed streaks ---------- */
+  var streakN = 80, streakPos = new Float32Array(streakN * 6), streakSeed = [];
+  (function () { var rnd = mulberry32(5); for (var i = 0; i < streakN; i++) streakSeed.push([rnd() * 120 - 60, rnd() * 50 - 25, -38 + rnd() * 44, 2 + rnd() * 5]); })();
+  var streakGeo = new THREE.BufferGeometry(); streakGeo.setAttribute("position", new THREE.BufferAttribute(streakPos, 3));
+  var streaks = new THREE.LineSegments(streakGeo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, fog: false }));
+  streaks.frustumCulled = false; scene.add(streaks);
+
+  /* ---------- shot 5: seven trails ---------- */
+  var trails = [];
+  (function () {
+    var rnd = mulberry32(31);
+    for (var i = 0; i < 7; i++) {
+      var S = new V3(8 + 2.2 * i + rnd() * 1.2, 50 + rnd() * 3, -6 + 2.0 * i);
+      var E = new V3(-30 + 8.5 * i + rnd() * 3, 6 + rnd() * 3, -26 + 7.5 * i);
+      var line = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 1, 10), M.inkFlat); scene.add(line);
+      var head = buildPod(M.ink); head.scale.setScalar(7); scene.add(head);
+      trails.push({ S: S, E: E, line: line, head: head, d: i * 0.12 });
+    }
+  })();
+
+  /* ---------- shot 6: one payload in close-up ---------- */
+  var W6 = new V3(0, 60, 0);
+  var hero = new THREE.Group(); scene.add(hero);
+  var heroBody = new THREE.Group(); hero.add(heroBody);
+  (function () {
+    var cone = new THREE.Mesh(new THREE.ConeGeometry(0.62, 2.5, 48), M.ink); cone.position.y = 0.5 + 1.25; heroBody.add(cone);
+    var base = cyl(0.62, 0.62, 0.5, 48, false, 0, 0, M.ink2); base.position.y = 0.25; heroBody.add(base);
+    [0.5, 0.02].forEach(function (y) { var r = cyl(0.626, 0.626, 0.02, 48, true, 0, 0, M.hair); r.position.y = y; heroBody.add(r); });
+    var r2 = cyl(0.42, 0.42, 0.02, 48, true, 0, 0, M.hair); r2.position.y = 1.25; heroBody.add(r2);
+    for (var i = 0; i < 4; i++) {
+      var n = cyl(0.07, 0.1, 0.24, 16, false, 0, 0, M.band); var a = i * PI / 2;
+      n.position.set(Math.cos(a) * 0.68, 0.25, Math.sin(a) * 0.68); n.rotation.z = -Math.cos(a) * PI / 2; n.rotation.x = Math.sin(a) * PI / 2; heroBody.add(n);
+    }
+  })();
+  heroBody.position.y = -1.5; // centre the payload on its group origin
+  var wThr = makeWord("Thrusters", { weight: 800, px: 220, height: 0.78, seed: 9 });
+  scene.add(wThr.mesh);
+  var puffs = [];
+  (function () { var rnd = mulberry32(13); for (var i = 0; i < 16; i++) {
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: smokeTex, color: 0x8e8e8e, transparent: true, depthWrite: false, fog: false }));
+    scene.add(sp); puffs.push({ sp: sp, k: i < 8 ? 0 : 1, j: rnd(), a: rnd() * 0.8 - 0.4 }); } })();
+  function arrowMesh() {
+    var s = new THREE.Shape(); s.moveTo(0, 0.09); s.lineTo(0.9, 0.09); s.lineTo(0.9, 0.24); s.lineTo(1.3, 0); s.lineTo(0.9, -0.24); s.lineTo(0.9, -0.09); s.lineTo(0, -0.09); s.closePath();
+    var m = new THREE.Mesh(new THREE.ShapeGeometry(s), new THREE.MeshBasicMaterial({ color: 0xff2b2b, transparent: true, depthWrite: false, fog: false, side: THREE.DoubleSide }));
+    m.renderOrder = 11; scene.add(m); return m;
+  }
+  var arrows = [arrowMesh(), arrowMesh()];
+  var fallN = 46, fallPos = new Float32Array(fallN * 6), fallSeed = [];
+  (function () { var rnd = mulberry32(17); for (var i = 0; i < fallN; i++) fallSeed.push([rnd() * 18 - 9, rnd() * 30, -14 + rnd() * 12, 1.5 + rnd() * 3]); })();
+  var fallGeo = new THREE.BufferGeometry(); fallGeo.setAttribute("position", new THREE.BufferAttribute(fallPos, 3));
+  var falls = new THREE.LineSegments(fallGeo, new THREE.LineBasicMaterial({ color: 0x3c3c3c, transparent: true, opacity: 0.9, fog: false }));
+  falls.frustumCulled = false; scene.add(falls);
+
+  /* ---------- shot 8: launch tube and stage words ---------- */
+  var tube = new THREE.Group(); scene.add(tube);
+  (function () {
+    var sh = cyl(0.8, 0.8, 12.8, 48, true, 0, 0, M.ink2); sh.material = M.ink2.clone(); sh.material.side = THREE.DoubleSide; sh.position.y = 6.4; tube.add(sh);
+    [1.0, 6.4, 11.8].forEach(function (y) { var r = cyl(0.806, 0.806, 0.03, 48, true, 0, 0, M.hair); r.position.y = y; tube.add(r); });
+    var lip = cyl(0.86, 0.86, 0.22, 48, false, 0, 0, M.band); lip.position.y = 12.7; tube.add(lip);
+  })();
+  var stageShadow = contactShadow(5, 5);
+  var wS1 = makeWord("Stage 1", { weight: 800, px: 200, height: 0.78, seed: 21 });
+  var wS2 = makeWord("Stage 2", { weight: 800, px: 200, height: 0.78, seed: 22 });
+  var wS3 = makeWord("Stage 3", { weight: 800, px: 200, height: 0.78, seed: 23 });
+  var wPay = makeWord("7 Payloads", { weight: 800, px: 180, height: 0.8, seed: 24, color: "#FF2B2B" });
+  var wEng = makeWord("Each with Its Own Engine", { weight: 700, px: 180, height: 0.42, seed: 25 });
+  [wS1, wS2, wS3, wPay, wEng].forEach(function (w) { scene.add(w.mesh); });
+  var pathLine = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1, 10), M.inkFlat); scene.add(pathLine);
+  var missileShadow = contactShadow(4.5, 4.5);
+
+  /* ---------- camera helpers ---------- */
+  function orbit(tgt, az, el, d) { return new V3(tgt.x + Math.sin(az) * Math.cos(el) * d, tgt.y + Math.sin(el) * d, tgt.z + Math.cos(az) * Math.cos(el) * d); }
+  function keys(t, ks) { // [{t, p:[x,y,z], g:[x,y,z]}], eased between keys
+    if (t <= ks[0].t) return { p: new V3().fromArray(ks[0].p), g: new V3().fromArray(ks[0].g) };
+    for (var i = 0; i < ks.length - 1; i++) {
+      var a = ks[i], b = ks[i + 1];
+      if (t <= b.t) { var k = eio((t - a.t) / (b.t - a.t)); return { p: mixV(new V3().fromArray(a.p), new V3().fromArray(b.p), k), g: mixV(new V3().fromArray(a.g), new V3().fromArray(b.g), k) }; }
+    }
+    var l = ks[ks.length - 1]; return { p: new V3().fromArray(l.p), g: new V3().fromArray(l.g) };
+  }
+  function setCam(p, g, up) { camera.position.copy(p); camera.up.copy(up || new V3(0, 1, 0)); camera.lookAt(g); camera.updateMatrixWorld(); }
+  function toScreen(v) { var p = v.clone().project(camera); return [(p.x * 0.5 + 0.5) * 1080, (-p.y * 0.5 + 0.5) * 1920]; }
+  function faceCamera(mesh, yawOnly) { var p = camera.position.clone(); if (yawOnly) p.y = mesh.position.y; mesh.lookAt(p); }
+
+  /* ---------- HTML pieces driven from 3D ---------- */
+  var el = function (id) { return document.getElementById(id); };
+  var whiteout = el("whiteout");
+  var tagPay = el("tag-pay"), tagFuel = el("tag-fuel");
+  var ldPay = el("ld-pay"), dotPay = el("dot-pay"), ldFuel = el("ld-fuel"), dotFuel = el("dot-fuel");
+  var mctx = document.createElement("canvas").getContext("2d"); mctx.font = '600 34px "Poppins"';
+  function tagWidth(text) { mctx.font = '600 34px "Poppins"'; return Math.round(mctx.measureText(text).width + 48 + 14 + 34); }
+  var TAGW_PAY = tagWidth("7 Independent Payloads"), TAGW_FUEL = tagWidth("Solid Fuel"), TAGH = 62;
+  function leader(line, dot, ax, ay, bx, by, alpha) {
+    line.setAttribute("x1", ax.toFixed(1)); line.setAttribute("y1", ay.toFixed(1));
+    line.setAttribute("x2", bx.toFixed(1)); line.setAttribute("y2", by.toFixed(1));
+    line.setAttribute("opacity", alpha.toFixed(3));
+    dot.setAttribute("x", (ax - 6).toFixed(1)); dot.setAttribute("y", (ay - 6).toFixed(1)); dot.setAttribute("opacity", alpha.toFixed(3));
+  }
+
+  /* ---------- shot 7 diagram geometry (paths sampled once, checked >= 175 px apart) ---------- */
+  var redPts = [], greyPts = [];
+  for (var ri = 0; ri <= 220; ri++) { var u = ri / 220; redPts.push([610 + 250 * Math.sin(2 * PI * 1.25 * u - 2.442), 470 + 1370 * u]); }
+  for (var gi = 0; gi <= 160; gi++) { var ug = gi / 160; greyPts.push([150 + 320 * Math.pow(ug, 1.6), 1840 - 690 * ug]); }
+  function dOf(pts) { return "M" + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L"); }
+  function cumLen(pts) { var L = [0]; for (var i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); return L; }
+  function pointAt(pts, L, f) {
+    var target = f * L[L.length - 1];
+    for (var i = 1; i < pts.length; i++) if (L[i] >= target) {
+      var k = (target - L[i - 1]) / Math.max(1e-6, L[i] - L[i - 1]);
+      var x = mix(pts[i - 1][0], pts[i][0], k), y = mix(pts[i - 1][1], pts[i][1], k);
+      return [x, y, Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0])];
+    }
+    var n = pts.length - 1; return [pts[n][0], pts[n][1], Math.atan2(pts[n][1] - pts[n - 1][1], pts[n][0] - pts[n - 1][0])];
+  }
+  var redL = cumLen(redPts), greyL = cumLen(greyPts);
+  el("red-path").setAttribute("d", dOf(redPts));
+  el("grey-path").setAttribute("d", dOf(greyPts));
+  el("grey-reveal").setAttribute("d", dOf(greyPts));
+  var gEnd = greyPts[greyPts.length - 1];
+  el("lab-int-br").setAttribute("points", (gEnd[0] - 30) + "," + (gEnd[1] - 40) + " " + (gEnd[0] - 30) + "," + (gEnd[1] + 10) + " " + (gEnd[0] - 30) + "," + (gEnd[1] - 15) + " " + (gEnd[0] - 12) + "," + (gEnd[1] - 15));
+  el("lab-int-tx").setAttribute("x", gEnd[0] - 48); el("lab-int-tx").setAttribute("y", gEnd[1] - 2);
+  var rLab = pointAt(redPts, redL, 0.2);
+  el("lab-pay-br").setAttribute("points", (rLab[0] + 34) + "," + (rLab[1] - 25) + " " + (rLab[0] + 34) + "," + (rLab[1] + 25) + " " + (rLab[0] + 34) + "," + rLab[1] + " " + (rLab[0] + 14) + "," + rLab[1]);
+  el("lab-pay-tx").setAttribute("x", rLab[0] + 52); el("lab-pay-tx").setAttribute("y", rLab[1] + 13);
+
+  function diagram(t) {
+    var pr = eio(seg(t, 39.2, 44.4)), pg = eo(seg(t, 38.5, 42.6));
+    el("red-path").setAttribute("stroke-dashoffset", (1 - pr).toFixed(4));
+    el("grey-reveal").setAttribute("stroke-dashoffset", (1 - pg).toFixed(4));
+    var rh = pointAt(redPts, redL, Math.max(0.001, pr)), gh = pointAt(greyPts, greyL, Math.max(0.001, pg));
+    el("red-head").setAttribute("transform", "translate(" + rh[0].toFixed(1) + " " + rh[1].toFixed(1) + ") rotate(" + ((rh[2] * 180 / PI) - 90).toFixed(1) + ")");
+    el("red-head").setAttribute("opacity", pr > 0.002 ? 1 : 0);
+    el("grey-head").setAttribute("transform", "translate(" + gh[0].toFixed(1) + " " + gh[1].toFixed(1) + ") rotate(" + ((gh[2] * 180 / PI) + 90).toFixed(1) + ")");
+    el("grey-head").setAttribute("opacity", pg > 0.002 ? 1 : 0);
+    el("lab-int").setAttribute("opacity", eo(seg(t, 41.0, 41.3)).toFixed(3));
+    el("lab-pay").setAttribute("opacity", eo(seg(t, 43.0, 43.3)).toFixed(3));
+  }
+
+  /* ---------- per-shot state ---------- */
+  var U = new V3(0, 1, 0);
+  function hideAll() {
+    [missile, truck, truckShadow, labelFloor.mesh, wLykos.mesh, wWx.mesh, ruleRed, streaks, hero, wThr.mesh, falls, tube, stageShadow,
+     wS1.mesh, wS2.mesh, wS3.mesh, wPay.mesh, wEng.mesh, pathLine, missileShadow, contours, gridW, gridStudio, gridDark].forEach(function (o) { o.visible = false; });
+    arrows.forEach(function (a) { a.visible = false; });
+    smoke.forEach(function (s) { s.sp.visible = false; });
+    puffs.forEach(function (s) { s.sp.visible = false; });
+    trails.forEach(function (tr) { tr.line.visible = false; tr.head.visible = false; });
+    resetMissile();
+    contours.material.uniforms.uWaveAmp.value = 0;
+  }
+  function whiteWorld(fogNear, fogFar, revealR, centre) {
+    scene.background = WHITE; scene.fog = fogWhite; fogWhite.near = fogNear; fogWhite.far = fogFar;
+    renderer.setClearColor(0x0b0b0b, 1);
+    contours.visible = true; gridW.visible = true;
+    [contours, gridW].forEach(function (m) {
+      var u = m.material.uniforms; u.uCenter.value.copy(centre || new V3()); u.uReveal.value = revealR; u.uRadius.value = 1e4;
+      u.uNear.value = fogNear; u.uFar.value = fogFar;
+    });
+  }
+  function setTruckFade(wire, solid) {
+    wireMat.opacity = wire; wireMat.clippingPlanes[0].constant = 100;
+    [tMatA, tMatB, tMatW].forEach(function (m) { m.opacity = solid; m.depthWrite = solid > 0.98; });
+  }
+  function truckPose(theta) {
+    erector.rotation.z = theta;
+    erector.updateMatrixWorld(true);
+    pistons.forEach(function (p) {
+      var a = new V3(-1.0, 1.25, p.userData.z), b = erector.localToWorld(new V3(4.2, -0.74, p.userData.z));
+      orientBetween(p, a, b);
+    });
+  }
+
+  host.render = function (t) {
+    hideAll();
+    whiteout.style.opacity = 0;
+    var tagPayOn = 0, tagFuelOn = 0;
+
+    if (t < 6) {
+      /* ---- 1: hero reveal ---- */
+      whiteWorld(45, 160, mix(26, 120, eo(seg(t, 0, 3.2))), new V3(-0.2, 0, 0));
+      missile.visible = true;
+      var yaw = mix(-0.5, -0.3, eio(t / 6));
+      var c1 = new V3(-0.2, 3.4 + 0.1 * Math.sin(1.3 * t), 0);
+      var th = 0.03 * Math.sin(0.9 * t);
+      poseMissile(new V3(), th, yaw); var ax = axisOf(missile); poseMissile(c1.clone().addScaledVector(ax, -6), th, yaw);
+      missileShadow.visible = true; missileShadow.position.set(c1.x, 0.02, c1.z); missileShadow.scale.set(3.2, 0.9, 1); missileShadow.rotation.z = yaw; missileShadow.material.opacity = 1;
+      var cam1 = orbit(new V3(-0.2, 4.4, -1.0), mix(0.30, 0.50, eio(t / 6)), 0.15, mix(30, 26.5, eio(t / 6)));
+      setCam(cam1, new V3(-0.2, 4.4, -1.0));
+      wLykos.mesh.visible = wWx.mesh.visible = ruleRed.visible = true;
+      wLykos.mesh.position.set(-3.9, 8.9, -6); faceCamera(wLykos.mesh, true); wLykos.draw(t, 0.5, 5.55, "frag");
+      wWx.mesh.position.set(1.5, 8.41, -6); wWx.mesh.rotation.copy(wLykos.mesh.rotation); wWx.draw(t, 1.0, 5.55, "frag");
+      var rk = eo(seg(t, 0.8, 1.5)) * (1 - eo(seg(t, 5.5, 5.8)));
+      var wx1 = new V3(1, 0, 0).applyQuaternion(wLykos.mesh.quaternion);
+      ruleRed.position.set(-3.9, 7.3, -6).addScaledVector(wx1, -3.3 + 3.3 * rk);
+      ruleRed.rotation.copy(wLykos.mesh.rotation); ruleRed.scale.set(Math.max(0.001, 6.6 * rk), 1, 1);
+    } else if (t < 12) {
+      /* ---- 2: the launcher assembles around the missile ---- */
+      whiteWorld(45, 160, 1e4, new V3());
+      missile.visible = truck.visible = truckShadow.visible = true;
+      var k2 = eio(seg(t, 6.0, 7.1));
+      var yaw2 = mix(-0.3, 0, k2), th2 = 0;
+      var cA = new V3(-0.2, mix(3.4 + 0.1 * Math.sin(1.3 * 6), 2.02, k2), 0);
+      poseMissile(new V3(), th2, yaw2); var ax2 = axisOf(missile); poseMissile(cA.clone().addScaledVector(ax2, -6), th2, yaw2);
+      truckPose(0);
+      var sweep = mix(-8.5, 9.5, eio(seg(t, 6.2, 7.5)));
+      setTruckFade(1 - eo(seg(t, 8.0, 8.5)), eo(seg(t, 7.5, 8.1)));
+      wireMat.clippingPlanes[0].constant = sweep;
+      truckShadow.position.set(0.8, 0.02, 0); truckShadow.scale.set(1, 1, 1); truckShadow.material.opacity = eo(seg(t, 7.5, 8.1));
+      var tg2 = new V3(3.2, -0.6, 2.2);
+      var cam2 = orbit(tg2, mix(1.04, 1.12, eio(seg(t, 6, 12))), 0.60, mix(32, 30, eio(seg(t, 6, 12))));
+      setCam(cam2, tg2);
+      labelFloor.mesh.visible = t >= 9.0; labelFloor.draw(t, 9.0, null, "type");
+    } else if (t < 18) {
+      /* ---- 3: raise, ignite, lift off into the smoke ---- */
+      whiteWorld(45, 160, 1e4, new V3());
+      missile.visible = truck.visible = truckShadow.visible = true; setTruckFade(0, 1);
+      truckShadow.position.set(0.8, 0.02, 0); truckShadow.material.opacity = 1;
+      var theta3 = (PI / 2) * eio(seg(t, 12.0, 13.5));
+      truckPose(theta3);
+      var lift = t > 15 ? 6.5 * Math.pow(t - 15, 2) + 0.8 * (t - 15) : 0;
+      poseMissile(new V3(P0.x, P0.y + lift, 0), theta3, 0);
+      flicker(f1, t, eo(seg(t, 14.0, 14.4)), 1);
+      // contours ripple outward from the pad
+      contours.material.uniforms.uCenter.value.set(P0.x, 0, 0);
+      contours.material.uniforms.uReveal.value = 1e4;
+      contours.material.uniforms.uWaveAmp.value = t > 14 ? 1.1 * (1 - seg(t, 14, 17.5)) : 0;
+      contours.material.uniforms.uWaveR.value = (t - 14) * 16;
+      contours.material.uniforms.uWaveW.value = 3.5;
+      labelFloor.mesh.visible = t < 12.6; labelFloor.draw(t, 9.0, 12.2, "type");
+      // smoke
+      smoke.forEach(function (s) {
+        var tau = t - s.b; if (tau <= 0) return; s.sp.visible = true;
+        var p;
+        if (s.col) {
+          var by = P0.y + (s.b > 15 ? 6.5 * Math.pow(s.b - 15, 2) : 0) - 0.5;
+          p = new V3(P0.x + Math.cos(s.a) * (0.6 + 1.2 * tau), Math.max(0.6, by - 1.2 * tau), Math.sin(s.a) * (0.6 + 1.2 * tau));
+          s.sp.scale.setScalar(s.s + 2.6 * Math.pow(tau, 0.7));
+        } else {
+          var r = s.v * tau / (1 + 0.55 * tau);
+          p = new V3(P0.x + Math.cos(s.a) * (1 + r), 0.6 + 0.9 * Math.sqrt(tau) + s.j, Math.sin(s.a) * (1 + r));
+          s.sp.scale.setScalar(s.s + 3.2 * Math.pow(tau, 0.75));
+        }
+        s.sp.position.copy(p); s.sp.material.opacity = 0.9 * eo(tau / 0.25);
+      });
+      var follow = Math.max(0, lift);
+      var cam3 = keys(t, [
+        { t: 12.0, p: [11.0, 1.8, 19.5], g: [-5.0, 6.4, 0] },
+        { t: 13.6, p: [10.0, 1.6, 18.5], g: [-6.2, 10.4, 0] },
+        { t: 15.0, p: [10.0, 1.6, 18.5], g: [-6.2, 10.4, 0] }]);
+      var g3 = cam3.g.clone(), p3 = cam3.p.clone();
+      if (t > 15) { g3.y += follow * 0.85; p3.y += follow * 0.25; }
+      var up3 = eio(seg(t, 16.9, 18.0));
+      p3.lerp(new V3(-3.5, Math.max(p3.y, 6) + 6, 5.5), up3);
+      setCam(p3, g3);
+      whiteout.style.opacity = eio(seg(t, 17.2, 17.85)).toFixed(3);
+    } else if (t < 28) {
+      /* ---- 4: space, stage drop, dive, the nose opens ---- */
+      scene.background = DARK; scene.fog = fogDark; renderer.setClearColor(0x070707, 1);
+      var C4 = new V3(0, 500, 0);
+      missile.visible = true;
+      var phi = mix(0.30, -0.55, eio(seg(t, 21.0, 23.2)));
+      var yaw4 = -0.45;
+      poseMissile(new V3(), phi, yaw4); var ax4 = axisOf(missile);
+      var base4 = C4.clone().addScaledVector(ax4, -5.5); poseMissile(base4, phi, yaw4);
+      var tau1 = t - 19.0;
+      if (tau1 > 0) { s1.position.y = -(1.6 * tau1 * tau1 + 0.9 * tau1); s1.position.x = 0.25 * tau1 * tau1; s1.rotation.x = 0.35 * tau1; s1.visible = tau1 < 5; }
+      flicker(f1, t, t < 19.0 ? 1 : 0, 1);
+      flicker(f2, t, eo(seg(t, 19.3, 19.6)) * (1 - eo(seg(t, 23.4, 23.9))), 2);
+      var op = eo(seg(t, 24.0, 24.9)) * 1.2 + 0.3 * seg(t, 25, 28);
+      pivA.rotation.z = -op; pivB.rotation.z = op;
+      var drift = 0.6 * seg(t, 24.6, 28);
+      pivA.position.x = 0.55 + drift; pivB.position.x = -0.55 - drift;
+      // dark grid below, sliding back
+      gridDark.visible = true; var gu = gridDark.material.uniforms;
+      gridDark.position.set(C4.x - ((t * 38) % 4), C4.y - 26, 0); gu.uCenter.value.set(C4.x, 0, 0); gu.uRadius.value = 1e4; gu.uReveal.value = 1e4; gu.uNear.value = 25; gu.uFar.value = 150;
+      // streaks along the line of flight
+      streaks.visible = true; streaks.material.opacity = 0.42 * eo(seg(t, 20.4, 21.2));
+      var dir = ax4.clone(), perp = new V3(-dir.y, dir.x, 0).normalize(), zz = new V3(0, 0, 1);
+      for (var i = 0; i < streakN; i++) {
+        var sd = streakSeed[i]; var a = ((sd[0] - 70 * (t - 18)) % 120 + 180) % 120 - 60;
+        var pA = C4.clone().addScaledVector(dir, a).addScaledVector(perp, sd[1]).addScaledVector(zz, sd[2]);
+        var pB = pA.clone().addScaledVector(dir, sd[3]);
+        streakPos.set([pA.x, pA.y, pA.z, pB.x, pB.y, pB.z], i * 6);
+      }
+      streakGeo.attributes.position.needsUpdate = true;
+      // camera: side tracking, then in to the open nose
+      var noseC = base4.clone().addScaledVector(ax4, 10.35);
+      var side = new V3(0, 0, 1).applyQuaternion(missile.quaternion).normalize();
+      var pA4 = C4.clone().add(new V3(1.5, 2.2, 24)), gA4 = C4.clone().add(new V3(0.6, 0.6, 0));
+      var pB4 = noseC.clone().addScaledVector(ax4, 6.6).addScaledVector(side, 5.4).add(new V3(0, 3.8, 0));
+      var k4 = eio(seg(t, 23.4, 25.4));
+      setCam(mixV(pA4, pB4, k4), mixV(gA4, noseC, k4));
+      if (t >= 25.5) {
+        tagPayOn = 1;
+        var anc = noseC.clone().addScaledVector(ax4, 0.55);
+        var sa = toScreen(anc), tx = Math.round(sa[0] - 150 - TAGW_PAY), ty = Math.round(sa[1] + 170);
+        tx = Math.max(60, tx);
+        tagPay.style.transform = "translate(" + tx + "px," + ty + "px)";
+        leader(ldPay, dotPay, sa[0], sa[1], tx + TAGW_PAY, ty + TAGH / 2, eo(seg(t, 25.5, 25.75)) * (1 - eo(seg(t, 27.7, 27.9))));
+      }
+      whiteout.style.opacity = (1 - eo(seg(t, 18.0, 18.7))).toFixed(3);
+    } else if (t < 32) {
+      /* ---- 5: seven payloads streak down ---- */
+      whiteWorld(90, 280, 1e4, new V3());
+      trails.forEach(function (tr) {
+        var pr5 = seg(t, 28.0 + tr.d, 31.4 + tr.d * 0.5); var p = 0.06 + 0.94 * (0.55 * pr5 + 0.45 * ei(pr5));
+        if (p <= 0) return;
+        var head = mixV(tr.S, tr.E, p); tr.line.visible = tr.head.visible = true;
+        orientBetween(tr.line, tr.S, head);
+        tr.head.position.copy(head); tr.head.quaternion.setFromUnitVectors(U, tr.E.clone().sub(tr.S).normalize());
+      });
+      setCam(new V3(30, 26, 96), new V3(2, 33, 0));
+    } else if (t < 38) {
+      /* ---- 6: thrusters steer one payload ---- */
+      scene.background = WHITE; scene.fog = null; renderer.setClearColor(0x0b0b0b, 1);
+      hero.visible = true; falls.visible = true;
+      var r1 = eio(seg(t, 34.6, 35.4)), r2 = eio(seg(t, 36.1, 36.9));
+      var tilt = 0.32 + 0.2 * r1 - 0.36 * r2;
+      var lat = 0.55 * eio(seg(t, 34.6, 35.6)) - 0.95 * eio(seg(t, 36.1, 37.2));
+      hero.position.set(W6.x + lat, W6.y, W6.z);
+      hero.rotation.set(0, 0, PI + tilt); heroBody.rotation.y = 0.6;
+      for (var fi2 = 0; fi2 < fallN; fi2++) {
+        var fs = fallSeed[fi2]; var yy = ((fs[1] + 26 * (t - 32)) % 30 + 30) % 30 - 15;
+        fallPos.set([W6.x + fs[0], W6.y + yy, W6.z + fs[2], W6.x + fs[0], W6.y + yy + fs[3], W6.z + fs[2]], fi2 * 6);
+      }
+      fallGeo.attributes.position.needsUpdate = true;
+      hero.updateMatrixWorld(true);
+      var tps = [34.5, 36.0];
+      puffs.forEach(function (pf) {
+        var tp = tps[pf.k], tau = t - tp; if (tau < 0 || tau > 0.9) return;
+        var ls = pf.k === 0 ? 1 : -1; // hero is upside down: local +x is world left
+        var noz = hero.localToWorld(new V3(ls * 0.75, -1.25, 0));
+        var out = hero.localToWorld(new V3(ls * 1.7, -1.25 + pf.a, 0)).sub(noz).normalize();
+        pf.sp.visible = true;
+        pf.sp.position.copy(noz).addScaledVector(out, (0.4 + 1.6 * eo(tau / 0.9)) * (0.7 + pf.j * 0.6));
+        pf.sp.scale.setScalar(0.35 + 1.3 * eo(tau / 0.9) * (0.7 + pf.j * 0.5));
+        pf.sp.material.opacity = 0.85 * (1 - eo(tau / 0.9));
+      });
+      arrows.forEach(function (ar, i) {
+        var tp = tps[i], a = eo(seg(t, tp, tp + 0.15)) * (1 - eo(seg(t, tp + 0.85, tp + 1.1)));
+        if (a <= 0) return; ar.visible = true; ar.material.opacity = a;
+        var dirX = i === 0 ? 1 : -1;
+        ar.position.set(hero.position.x + dirX * 0.62, W6.y + 0.2, W6.z + 0.9); ar.scale.setScalar(0.75);
+        ar.rotation.set(0, 0, dirX > 0 ? 0 : PI);
+      });
+      var k6 = eio(seg(t, 32, 38));
+      var fx6 = W6.x + lat * 0.85;
+      setCam(new V3(fx6 + 1.2, W6.y + 1.0, mix(10.6, 9.8, k6)), new V3(fx6 - 0.3, W6.y + 1.0, 0));
+      wThr.mesh.visible = true; wThr.mesh.position.set(fx6 - 0.3, W6.y + 2.75, W6.z + 0.2); faceCamera(wThr.mesh); wThr.draw(t, 33.0, 37.55, "frag");
+    } else if (t < 46) {
+      /* ---- 7: the flat diagram covers the frame ---- */
+      scene.background = WHITE; scene.fog = null; renderer.setClearColor(0x0b0b0b, 1);
+      setCam(new V3(0, 0, 10), new V3(0, 0, 0));
+      diagram(t);
+    } else if (t < 64) {
+      /* ---- 8 + 9: the exploded view in the studio, then lift-off ---- */
+      scene.background = null; scene.fog = null; renderer.setClearColor(0xffffff, 0);
+      missile.visible = true; poseMissile(new V3(0, 0, 0), PI / 2, 0);
+      gridStudio.visible = true; var su = gridStudio.material.uniforms; su.uCenter.value.set(0, 0, 0); su.uRadius.value = 34; su.uReveal.value = 1e4; su.uNear.value = 60; su.uFar.value = 120;
+      var close = eio(seg(t, 60.0, 60.6));
+      var o2 = 1.6 * eio(seg(t, 49.0, 49.6)) * (1 - close);
+      var o3 = (1.6 * eio(seg(t, 49.0, 49.6)) + 1.6 * eio(seg(t, 52.0, 52.6))) * (1 - close);
+      var o4 = (1.6 * eio(seg(t, 49.0, 49.6)) + 1.6 * eio(seg(t, 52.0, 52.6)) + 1.6 * eio(seg(t, 54.0, 54.6))) * (1 - close);
+      s2.position.y = 4.75 + o2; s3.position.y = 8.4 + o3; nose.position.y = 10.0 + o4;
+      // the fuel panel lifts off
+      var pk = eio(seg(t, 49.7, 50.1)) * (1 - eio(seg(t, 59.4, 60.0)));
+      panel.position.z = 0.9 * pk; panelMat.opacity = 1 - pk; panel.visible = pk < 0.99;
+      // nose opens, closes, then the hairline scan
+      var on = eio(seg(t, 56.0, 56.7)) * (1 - eio(seg(t, 57.8, 58.3)));
+      pivA.rotation.z = -1.15 * on; pivB.rotation.z = 1.15 * on;
+      var scanK = seg(t, 58.3, 59.3);
+      if (scanK > 0 && scanK < 1) {
+        scanWire.visible = true; var noseBaseY = nose.position.y, tipY = noseBaseY + 2.05;
+        scanPlane.normal.set(0, 1, 0); scanPlane.constant = -(tipY - (tipY - noseBaseY) * scanK);
+        scanWire.material.opacity = 1 - eo(seg(t, 59.0, 59.3));
+      }
+      // the launch tube rises off
+      tube.visible = t < 48.2; tube.position.set(0, 26 * ei(seg(t, 46.2, 47.9)), 0);
+      // lift-off (shot 9)
+      var lift9 = t > 61.5 ? 14 * Math.pow(t - 61.5, 2) + 0.6 * (t - 61.5) : 0;
+      missile.position.y = lift9;
+      flicker(f1, t, eo(seg(t, 61.3, 61.6)), 3);
+      if (lift9 > 0.05) { pathLine.visible = true; orientBetween(pathLine, new V3(0, 0.02, 0), new V3(0, lift9, 0)); }
+      missileShadow.visible = true; missileShadow.position.set(0, 0.02, 0); missileShadow.scale.set(1, 1, 1); missileShadow.rotation.z = 0;
+      missileShadow.material.opacity = 1 - eo(lift9 / 6);
+      // camera
+      var c8 = keys(t, [
+        { t: 46.0, p: [3.1, 7.8, 27.0], g: [-3.2, 6.6, 0] },
+        { t: 48.4, p: [3.1, 7.8, 27.0], g: [-3.2, 6.6, 0] },
+        { t: 49.0, p: [1.7, 3.4, 10.4], g: [-1.3, 2.7, 0] },
+        { t: 51.45, p: [1.7, 3.4, 10.4], g: [-1.3, 2.7, 0] },
+        { t: 52.0, p: [1.7, 8.9, 10.4], g: [-1.3, 8.2, 0] },
+        { t: 53.1, p: [1.7, 8.9, 10.4], g: [-1.3, 8.2, 0] },
+        { t: 53.9, p: [1.7, 13.2, 10.4], g: [-1.3, 12.5, 0] },
+        { t: 55.0, p: [1.7, 13.2, 10.4], g: [-1.3, 12.5, 0] },
+        { t: 55.9, p: [2.2, 17.4, 11.2], g: [0, 16.4, 0] },
+        { t: 60.0, p: [2.2, 17.4, 11.2], g: [0, 16.4, 0] },
+        { t: 61.4, p: [-2.2, 9.0, 34.0], g: [-5.6, 9.4, 0] }]);
+      setCam(c8.p, c8.g);
+      // stage words, left of the stack
+      function stageWord(w, y, t0, t1) { w.mesh.visible = true; w.mesh.position.set(-1.15 - w.aspect * w.height / 2, y, 0.3); w.mesh.rotation.set(0, 0.12, 0); w.draw(t, t0, t1, "frag"); }
+      if (t >= 49 && t < 51.6) stageWord(wS1, 4.0, 49.0, 51.0);
+      if (t >= 52 && t < 53.8) stageWord(wS2, 8.6, 52.0, 53.2);
+      if (t >= 54 && t < 55.7) stageWord(wS3, 12.6, 54.0, 55.1);
+      if (t >= 57) {
+        wPay.mesh.visible = wEng.mesh.visible = true;
+        wPay.mesh.position.set(0, 18.55, 0.2); wPay.mesh.rotation.set(0, 0.19, 0); wPay.draw(t, 57.0, 59.6, "frag");
+        wEng.mesh.position.set(0, 17.88, 0.2); wEng.mesh.rotation.set(0, 0.19, 0); wEng.draw(t, 57.3, 59.6, "frag");
+      }
+      if (t >= 50 && t < 51.6) {
+        tagFuelOn = 1;
+        missile.updateMatrixWorld(true);
+        var fa = toScreen(missile.localToWorld(new V3(0.1, 2.3, 0.58)));
+        var fx = Math.round(fa[0] - 110 - TAGW_FUEL), fy = Math.round(fa[1] + 110);
+        tagFuel.style.transform = "translate(" + fx + "px," + fy + "px)";
+        leader(ldFuel, dotFuel, fa[0], fa[1], fx + TAGW_FUEL, fy + TAGH / 2, eo(seg(t, 50.0, 50.25)) * (1 - eo(seg(t, 51.3, 51.5))));
+      }
+    } else {
+      /* ---- end card: the white page from above ---- */
+      whiteWorld(300, 600, 1e4, new V3());
+      setCam(new V3(0, 74, 0.001), new V3(0, 0, 0), new V3(0, 0, -1));
+    }
+
+    if (!tagPayOn) { ldPay.setAttribute("opacity", 0); dotPay.setAttribute("opacity", 0); }
+    if (!tagFuelOn) { ldFuel.setAttribute("opacity", 0); dotFuel.setAttribute("opacity", 0); }
+    renderer.render(scene, camera);
+  };
+
+  host.render(host.toDesign(host.clock.t));
+  host.ready();
+})();
+</script>
+</body>
+</html>

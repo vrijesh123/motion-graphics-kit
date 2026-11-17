@@ -14,7 +14,8 @@ what worked in the project's `script.md` so it can become the template and skill
   `clients/_template/` is the blank pack.
 - `projects/<client>-<slug>/` one folder per video: `index.html`, `cues.json`, `script.md`, `assets/`.
 - `refrences/` analysed 3D references, text only (the folder name is spelled this way on purpose; keep it).
-  Empty for now. One folder per reference with `analysis.md` and the small JSON files from `tools/prep_reference.py`.
+  Start with `SUMMARY.md`. One folder per reference with `analysis.md` and the small JSON files from
+  `tools/prep_reference.py`; long videos are split into `chunks/` (index in `chunks.json`).
 - `tools/` shared scripts (see below). `outputs/` finished renders (git-ignored). `docs/` guide + media manifest.
 
 ## Branches and clients

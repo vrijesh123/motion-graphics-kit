@@ -74,3 +74,8 @@ Then follow `make-motion-video`: the script comes first, for approval.
   branch. Its approved copy, the user's decisions and the questions still open with WOLFx are in
   `projects/wolfx-clarity-promo/script.md` there (`git show wolfx:projects/wolfx-clarity-promo/script.md`).
 - 2026-11-17: pack copied to the `3d-graphics` branch for 3D videos (see the note at the top).
+- 2026-11-17: second video started on `3d-graphics`: the "Lykos Wx-1" missile film
+  (`projects/wolfx-missile-film/script.md`), a launch reveal of a fictional WOLFx missile in the style of the
+  reference's first chunk (the user's direction; it started as a metaphor in Draft 1). The user chose
+  **Title Case for on-screen text** (answers item 5 above for this film), text only (no voice-over), standalone
+  with the default end card.

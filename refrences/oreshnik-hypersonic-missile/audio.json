@@ -1,0 +1,567 @@
+{
+  "has_audio": true,
+  "integrated_lufs": -18.0,
+  "tempo_estimate_bpm": 178.6,
+  "tempo_confidence_0_1": 0.08,
+  "tempo_note": "autocorrelation of spectral-flux onsets; may be half/double the felt tempo",
+  "whisper_language": "en",
+  "whisper_language_prob": 1.0,
+  "speech_seconds_vad": 457.4,
+  "speech_fraction": 0.83,
+  "transcript_segments": [
+    {
+      "start": 0.62,
+      "end": 6.64,
+      "text": "This is the Orishnig Missile, a state-of-the-art weapon system launched from a massive 12x12 truck platform.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.21
+    },
+    {
+      "start": 6.92,
+      "end": 12.1,
+      "text": "It has been meticulously engineered with multiple stages, enabling it to reach orbit in a few minutes.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.21
+    },
+    {
+      "start": 12.92,
+      "end": 17.04,
+      "text": "But what sets it apart from all the rest? Well, this missile can hit hypersonic speed.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.21
+    },
+    {
+      "start": 17.76,
+      "end": 22.92,
+      "text": "Once it reaches this altitude, it transitions into a steep dive, accelerating to hypersonic speeds.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.21
+    },
+    {
+      "start": 23.62,
+      "end": 28.38,
+      "text": "During its descent, the missile's fairing opens to unveil six highly sophisticated warheads.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.21
+    },
+    {
+      "start": 29.04,
+      "end": 32.1,
+      "text": "Each warhead is equipped with miniature thrusters at its base.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.14
+    },
+    {
+      "start": 33.04,
+      "end": 37.94,
+      "text": "These thrusters enable the warheads to maneuver dynamically, even as they fall under the influence of gravity.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.14
+    },
+    {
+      "start": 38.74,
+      "end": 44.32,
+      "text": "It can change directions, making it almost impossible for the Patriot missile to hit its target all in the video ahead.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.14
+    },
+    {
+      "start": 44.98,
+      "end": 47.82,
+      "text": "The missile design incorporates three distinct stages.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.14
+    },
+    {
+      "start": 48.24,
+      "end": 53.6,
+      "text": "The first stage consists of mobile thrusters, which help move the missile, and it is filled with solid fuel.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.14
+    },
+    {
+      "start": 54.94,
+      "end": 60.26,
+      "text": "Just above it is the second stage, followed by the third and final stage, which holds six warheads.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.13
+    },
+    {
+      "start": 61.02,
+      "end": 67.5,
+      "text": "Each with their own engine. This design enables the missile to deliver a powerful payload over long distances with remarkable precision.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.13
+    },
+    {
+      "start": 68.42,
+      "end": 72.98,
+      "text": "Weighing up to 50 tons at launch and carrying the warhead payload of 1.3 tons.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.13
+    },
+    {
+      "start": 75.79,
+      "end": 81.93,
+      "text": "The Orishnig missile has a range of 4,000 to 6,000 kilometers. This is capable of hitting all over Europe.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.13
+    },
+    {
+      "start": 83.09,
+      "end": 88.23,
+      "text": "What's particularly fascinating is that this missile is equipped with a sophisticated MIRV,",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.12
+    },
+    {
+      "start": 88.87,
+      "end": 95.15,
+      "text": "multiple independently target-amble reentry vehicle system, capable of deploying approximately six warheads.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.12
+    },
+    {
+      "start": 96.25,
+      "end": 99.55,
+      "text": "These six reentry vehicles are reportedly based on American designs.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.12
+    },
+    {
+      "start": 100.53,
+      "end": 104.83,
+      "text": "Although much of the technical information remains classified, here is what we know so far.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.12
+    },
+    {
+      "start": 105.85,
+      "end": 110.99,
+      "text": "The missile itself is launched from a self-propelled platform equipped with a 12x12 wheel configuration.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.12
+    },
+    {
+      "start": 112.25,
+      "end": 113.99,
+      "text": "Allowing for significant mobility.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.09
+    },
+    {
+      "start": 115.11,
+      "end": 118.89,
+      "text": "The TDL transport erector launcher system supports a cold launch method.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.09
+    },
+    {
+      "start": 119.45,
+      "end": 121.83,
+      "text": "Let's take a look at what is a cold launch system.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.09
+    },
+    {
+      "start": 122.51,
+      "end": 132.01,
+      "text": "A cold launch is a type of missile that is ejected from its launch tube or canister using an initial burst of compressed gas or a small explosive charge before its main rocket engine ignites.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.09
+    },
+    {
+      "start": 133.03,
+      "end": 142.37,
+      "text": "This launch method contrasts with hot launch systems like the Thad or Patriot, where the missile's main engine fires while it is still inside the launch tube or canister.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 143.37,
+      "end": 148.33,
+      "text": "This cold launch technique reduces wear on the launcher and minimizes the risk of launch site detection.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 149.43,
+      "end": 158.41,
+      "text": "Additionally, the TDL is equipped with advanced hydraulics for stabilization and precise alignment of the missile before launch, ensuring accurate trajectory initiation.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 159.81,
+      "end": 167.61,
+      "text": "The system also integrates secure communications and command links with Russia's strategic rocket forces, enabling coordinated fire missions.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 168.87,
+      "end": 175.61,
+      "text": "At the front of the reentry vehicle is the fuse and the nose, which are critical for its aerobanamic performance and functional operation.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 176.97,
+      "end": 181.45,
+      "text": "Directly behind the nose is the contact sensor, along with the arming and fusing system.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 182.45,
+      "end": 187.57,
+      "text": "This system ensures the warhead is armed and ready to detonate at the correct moment upon reaching its target.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 188.41,
+      "end": 190.67,
+      "text": "Moving further back, we find the warhead compartment.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 192.33,
+      "end": 199.61,
+      "text": "This section can house a nuclear warhead, making the vehicle a potential tool for strategic deterrence or offense depending on its intended use.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 201.09,
+      "end": 207.89,
+      "text": "One of the critical features of this reentry vehicle is its ability to maneuver and change direction while traveling at extremely high speeds.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 208.85,
+      "end": 219.95,
+      "text": "To achieve this, the vehicle is equipped with two spin nozzles located at specific points on its structure and a spin gas generator which provides the propulsion necessary for such precise movements.",
+      "no_speech_prob": 0.14,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 222.18,
+      "end": 226.96,
+      "text": "Finally, the guidance system plays a vital role in ensuring the vehicle reaches its intended target.",
+      "no_speech_prob": 0.14,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 228.08,
+      "end": 235.64,
+      "text": "This is facilitated by a GLONUS antenna, which utilizes satellite navigation technology to guide the vehicle accurately to its destination.",
+      "no_speech_prob": 0.14,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 237.36,
+      "end": 244.16,
+      "text": "Let's take a look at how does it work. The missile begins its flight by firing its first stage boost motor propelling it out of the silo.",
+      "no_speech_prob": 0.02,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 248.0,
+      "end": 255.94,
+      "text": "Roughly 60 seconds into the flight, the first stage separates and the second stage motor ignites while the protective missile shroud is jettisoned.",
+      "no_speech_prob": 0.02,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 258.26,
+      "end": 265.34,
+      "text": "About 180 seconds after launch, the thrusters ceases and the post-boost vehicle, also known as the bus, attaches from the rocket.",
+      "no_speech_prob": 0.02,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 266.5,
+      "end": 271.22,
+      "text": "The post-boost vehicle maneuvers into positions preparing to deploy the reentry vehicles.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 272.5,
+      "end": 279.38,
+      "text": "As the bus moves away, it releases the reentry vehicles because the last stage had traveled at a very high parabolic path.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 281.3,
+      "end": 285.0,
+      "text": "The reentry vehicle will fall at hypersonic speed of around Mach 11.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 286.56,
+      "end": 293.52,
+      "text": "These multiple independently-targetable reentry vehicles use these rotating thrusters to target the vehicles towards its target.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 295.42,
+      "end": 302.02,
+      "text": "Finally, the nuclear warheads detonate, either as air bursts or ground bursts, depending on the target mission requirements.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 303.22,
+      "end": 305.24,
+      "text": "What's so special about this ICBM?",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 306.4,
+      "end": 312.22,
+      "text": "Speed plays a pivotal role in the effectiveness of missiles. The faster a missile travels, the quicker it can reach its target.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 313.26,
+      "end": 320.38,
+      "text": "After launch, the missile ascends into the upper atmosphere, where it travels at high altitudes before descending sharply toward its target.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 321.68,
+      "end": 328.36,
+      "text": "In high-stakes scenarios, even a few seconds can make the difference between a successful interception and catastrophic damage.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 329.36,
+      "end": 331.46,
+      "text": "If we move the longer shot, this is how it travels.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 332.26,
+      "end": 336.96,
+      "text": "Ballistic missiles, in particular, operate by following a characteristic parabolic trajectory.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 338.18,
+      "end": 344.2,
+      "text": "As the missile reenters the lower atmosphere, it can accelerate significantly, gaining immense kinetic energy.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 345.24,
+      "end": 351.92,
+      "text": "This energy is not merely a measure of its destructive potential upon impact, but also enhances its ability to maneuver mid-flight.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 352.66,
+      "end": 360.64,
+      "text": "Such maneuverability enables the reentry vehicle to perform evasive actions, often likened to a defensive wriggle, to outmaneuver intersection attempts.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 361.4,
+      "end": 367.56,
+      "text": "This agility poses a formidable challenge for advanced defense systems, such as Ukraine's US-built Patriot missile,",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 367.8,
+      "end": 372.02,
+      "text": "which are designed to tech, track, and neutralize incoming threats at a particular speed.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 372.02,
+      "end": 378.24,
+      "text": "The Patriot will not be able to calculate and hit a missile moving in zig-zag directions at hypersonic speed.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 379.0,
+      "end": 385.32,
+      "text": "In short, defense systems must not only react faster, but also anticipate and counter unpredictable movements in real-time.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 386.14,
+      "end": 388.66,
+      "text": "This is why this missile is special for the Russian forces.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 390.42,
+      "end": 396.22,
+      "text": "To give you a better idea, let's compare the Iskandar with this intercontinental ballistic missile, or ICBM,",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 396.76,
+      "end": 400.58,
+      "text": "by examining their trajectories, speed, range, and intended uses.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 400.58,
+      "end": 407.44,
+      "text": "The Iskandar missile follows a quasi-ballistic trajectory, lending characteristics of both ballistic and cruise missiles.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 408.98,
+      "end": 416.58,
+      "text": "Unlike a traditional ballistic missile, the Iskandar can maneuver mid-flight, unpredictably altering its path to evade missile defense systems.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 417.28,
+      "end": 422.58,
+      "text": "Additionally, it travels at much lower altitudes, which further complicates interception by conventional defenses.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 424.2,
+      "end": 430.56,
+      "text": "In contrast, ballistic missiles follow a high parabolic trajectory that consists of three distinct phases.",
+      "no_speech_prob": 0.11,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 431.34,
+      "end": 438.82,
+      "text": "In the boost phase, the missile powers its ascent. During the mid-course phase, it travels through space in a largely unpowered, gravity-influenced path.",
+      "no_speech_prob": 0.11,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 439.46,
+      "end": 443.98,
+      "text": "And in the terminal phase, it re-enters the atmosphere, descending rapidly toward its target.",
+      "no_speech_prob": 0.11,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 449.36,
+      "end": 453.96,
+      "text": "When comparing speeds, both ballistic missiles and the Iskandar can achieve hypersonic velocities.",
+      "no_speech_prob": 0.11,
+      "avg_logprob": -0.06
+    },
+    {
+      "start": 455.38,
+      "end": 465.44,
+      "text": "Traditional ballistic missiles typically exceed Mach 5, but the Orshenik ICBM prudent says it can hit Mach 11 during their re-entry phase, making them difficult to intercept.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.13
+    },
+    {
+      "start": 466.62,
+      "end": 472.84,
+      "text": "The Iskandar missile is similarly capable of reaching hypersonic speeds, ranging between Mach 5 and Mach 7.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.13
+    },
+    {
+      "start": 473.84,
+      "end": 475.84,
+      "text": "The range of these missiles is another key distinction.",
+      "no_speech_prob": 0.01,
+      "avg_logprob": -0.13
+    },
+    {
+      "start": 476.8,
+      "end": 490.06,
+      "text": "Intercontinental ballistic missiles ICBMs are designed for extreme distances, exceeding 5,500 km, which is about 3,417 miles, making them ideal for global strategic strikes.",
+      "no_speech_prob": 0.08,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 491.12,
+      "end": 501.6,
+      "text": "On the other hand, the Iskandar missile is a short-range ballistic missile with a range of 500 to 700 km, which is around 310 to 434 miles.",
+      "no_speech_prob": 0.08,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 503.12,
+      "end": 508.62,
+      "text": "Hiscutes it firmly within the short-range category and aligns it more closely with battlefield-level operations.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 510.02,
+      "end": 513.98,
+      "text": "Finally, the intended purpose of these missiles highlights their fundamental differences.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 514.62,
+      "end": 520.52,
+      "text": "Ballistic missiles, particularly ICBMs, are strategic weapons designed for long-range, high-impact scenarios.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 521.18,
+      "end": 525.64,
+      "text": "They are often used as a deterrent or for targeting critical infrastructure in a global conflict.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 526.22,
+      "end": 530.6,
+      "text": "In contrast, the Iskandar missile is a tactical system optimized for battlefield use.",
+      "no_speech_prob": 0.0,
+      "avg_logprob": -0.08
+    },
+    {
+      "start": 531.6,
+      "end": 540.74,
+      "text": "It is specifically designed to strike enemy air defenses, command centers, and other key installations in localized conflicts, making it a versatile and precise tool in regional engagements.",
+      "no_speech_prob": 0.06,
+      "avg_logprob": -0.07
+    },
+    {
+      "start": 541.26,
+      "end": 547.46,
+      "text": "As an engineering channel, we also made the secrets behind this stealth bomber, so check this out and do subscribe to not miss a beat.",
+      "no_speech_prob": 0.06,
+      "avg_logprob": -0.07
+    }
+  ],
+  "transcript_note": "Whisper output after VAD; low avg_logprob or high no_speech_prob usually means lyrics/noise, not voiceover"
+}
