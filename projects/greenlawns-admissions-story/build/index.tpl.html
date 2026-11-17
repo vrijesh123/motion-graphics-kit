@@ -9,10 +9,10 @@
       Every graphic is cut from the client's flat poster by build/extract_layers.py (assets/layers/, boxes in
       poster px); the crest is the client's PNG. #poster holds the poster at 1:1 and is scaled to POSTER_SCALE so the
       crest clears Instagram's profile bar and the url clears the reply bar. Set POSTER_SCALE = 1, POSTER_Y = 0 for
-      the poster's original layout. No voice-over: the soundtrack is music + SFX from cues.json.
+      the poster's original size. LINE_GAP / HEAD_MARGIN open up the headline (client feedback, 2026-11-17). No voice-over: the soundtrack is music + SFX from cues.json.
     -->
     <style>
-      :root { --cream: #FDF5EC; --grid: #F3EADF; --shadow: rgba(20, 50, 30, 0.28); }
+      :root { --cream: #FDF5EC; --grid: #F3EADF; --ink: #01300F; --shadow: rgba(20, 50, 30, 0.28); }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
       #root { position: relative; width: 1080px; height: 1920px; background: var(--cream); overflow: hidden; }
@@ -22,7 +22,8 @@
       #poster { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
       #cam { position: absolute; inset: 0; }
       .ly { position: absolute; display: block; }
-      #puzzle { position: absolute; inset: 0; }
+      #puzzle, .grp { position: absolute; inset: 0; }
+      #url { left: 0; top: 1810px; width: 1080px; text-align: center; font-family: "Poppins", sans-serif; font-weight: 700; font-size: 40px; line-height: 1.2; color: var(--ink); letter-spacing: -0.005em; }
       .pz { position: absolute; }
       .pzm { position: absolute; inset: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; overflow: hidden; }
       .pzp, .pzf { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
@@ -49,7 +50,9 @@
       const GRID = css.getPropertyValue("--grid").trim(), SHADOW = css.getPropertyValue("--shadow").trim();
 
       // poster placement inside Instagram's safe area (see header comment)
-      const POSTER_SCALE = 0.82, POSTER_Y = 172;
+      const POSTER_SCALE = 0.80, POSTER_Y = 173;
+      // headline spacing (poster px; 2026-11-17 feedback): extra gap between ADMISSIONS and OPEN, and below the headline
+      const LINE_GAP = 20, HEAD_MARGIN = 24;
 
       // faint grid as on the poster: 135 x 121 px cells
       q("#grid").innerHTML = (() => {
@@ -61,6 +64,10 @@
 
       const tl = gsap.timeline({ paused: true });
       gsap.set("#poster", { scale: POSTER_SCALE, y: POSTER_Y, transformOrigin: "540px 0px" });
+      gsap.set("#open-line, #tk-head-r", { y: LINE_GAP });
+      gsap.set("#tk-head-l", { y: LINE_GAP / 2 });
+      gsap.set("#head-brush", { scaleY: (332 + LINE_GAP) / 332, transformOrigin: "50% 0%" });   // brush grows to cover OPEN
+      gsap.set("#below", { y: LINE_GAP + HEAD_MARGIN });
 
       // helpers
       const wipe = (sel, t, dur = 0.4, from = "right") => tl.fromTo(sel,
@@ -109,7 +116,7 @@
       wipe("#date-line", 4.45, 0.4);
       burst("#tk-date-l, #tk-date-r", 4.5);
       tl.fromTo(".tw", { y: 22, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out", stagger: 0.11 }, 5.0);
-      tl.fromTo("#url", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "expo.out" }, 6.05);
+      tl.fromTo("#url", { scale: 0.8, opacity: 0, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, duration: 0.4, ease: "expo.out" }, 6.05);
 
       // ---- 6.4-12 hold: small life everywhere, nothing new to read ----
       const PUSH = { tl: "30% 30%", tr: "62% 26%", bl: "45% 34%", br: "62% 36%" };   // aim at faces, away from shirt crests

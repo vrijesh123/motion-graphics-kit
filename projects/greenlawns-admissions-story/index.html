@@ -1,18 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-resolution="portrait">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1080, height=1920" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
     <!--
       Greenlawns "Admissions open 2027-2028" Instagram story, 1080x1920, 12 s. Option A, "Pieces find their place".
       Every graphic is cut from the client's flat poster by build/extract_layers.py (assets/layers/, boxes in
       poster px); the crest is the client's PNG. #poster holds the poster at 1:1 and is scaled to POSTER_SCALE so the
       crest clears Instagram's profile bar and the url clears the reply bar. Set POSTER_SCALE = 1, POSTER_Y = 0 for
-      the poster's original layout. No voice-over: the soundtrack is music + SFX from cues.json.
+      the poster's original size. LINE_GAP / HEAD_MARGIN open up the headline (client feedback, 2026-11-17). No voice-over: the soundtrack is music + SFX from cues.json.
     -->
     <style>
-      :root { --cream: #FDF5EC; --grid: #F3EADF; --shadow: rgba(20, 50, 30, 0.28); }
+      :root { --cream: #FDF5EC; --grid: #F3EADF; --ink: #01300F; --shadow: rgba(20, 50, 30, 0.28); }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
       #root { position: relative; width: 1080px; height: 1920px; background: var(--cream); overflow: hidden; }
@@ -22,84 +22,90 @@
       #poster { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
       #cam { position: absolute; inset: 0; }
       .ly { position: absolute; display: block; }
-      #puzzle { position: absolute; inset: 0; }
+      #puzzle, .grp { position: absolute; inset: 0; }
+      #url { left: 0; top: 1810px; width: 1080px; text-align: center; font-family: "Poppins", sans-serif; font-weight: 700; font-size: 40px; line-height: 1.2; color: var(--ink); letter-spacing: -0.005em; }
       .pz { position: absolute; }
       .pzm { position: absolute; inset: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; overflow: hidden; }
       .pzp, .pzf { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1080" data-height="1920">
+    <div data-hf-id="hf-umm9" id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1080" data-height="1920">
 
-      <section id="story" class="clip" data-start="0" data-duration="12" data-track-index="0" data-track-kind="graphics">
-        <svg id="grid" viewBox="0 0 1080 1920" aria-hidden="true" data-layout-allow-overflow></svg>
-        <img id="wave" src="assets/layers/wave.png" alt="" />
-        <div id="poster" data-layout-allow-overflow><div id="cam">
+      <section data-hf-id="hf-flil" id="story" class="clip" data-start="0" data-duration="12" data-track-index="0" data-track-kind="graphics">
+        <svg data-hf-id="hf-7pr2" id="grid" viewBox="0 0 1080 1920" aria-hidden="true" data-layout-allow-overflow="" />
+        <img data-hf-id="hf-7jje" id="wave" src="assets/layers/wave.png" alt="">
+        <div data-hf-id="hf-gkfr" id="poster" data-layout-allow-overflow=""><div data-hf-id="hf-ftaq" id="cam">
                 <!-- headline: yellow brush + letters (cut from the poster) -->
-        <img id="head-brush" class="ly wipe" src="assets/layers/head_brush.png" alt="" style="left:117.0px; top:100.0px; width:864.0px; height:332.0px" />
-        <img id="h-admissions-0" class="ly hl adm" src="assets/layers/h_admissions_0.png" alt="" style="left:140.0px; top:186.0px; width:108.0px; height:110.0px" />
-        <img id="h-admissions-1" class="ly hl adm" src="assets/layers/h_admissions_1.png" alt="" style="left:240.0px; top:181.0px; width:88.0px; height:108.0px" />
-        <img id="h-admissions-2" class="ly hl adm" src="assets/layers/h_admissions_2.png" alt="" style="left:332.0px; top:171.0px; width:117.0px; height:113.0px" />
-        <img id="h-admissions-3" class="ly hl adm" src="assets/layers/h_admissions_3.png" alt="" style="left:447.0px; top:168.0px; width:33.0px; height:108.0px" />
-        <img id="h-admissions-4" class="ly hl adm" src="assets/layers/h_admissions_4.png" alt="" style="left:485.0px; top:164.0px; width:79.0px; height:109.0px" />
-        <img id="h-admissions-5" class="ly hl adm" src="assets/layers/h_admissions_5.png" alt="" style="left:567.0px; top:159.0px; width:79.0px; height:110.0px" />
-        <img id="h-admissions-6" class="ly hl adm" src="assets/layers/h_admissions_6.png" alt="" style="left:647.0px; top:156.0px; width:33.0px; height:107.0px" />
-        <img id="h-admissions-7" class="ly hl adm" src="assets/layers/h_admissions_7.png" alt="" style="left:683.0px; top:151.0px; width:106.0px; height:110.0px" />
-        <img id="h-admissions-8" class="ly hl adm" src="assets/layers/h_admissions_8.png" alt="" style="left:792.0px; top:143.0px; width:97.0px; height:111.0px" />
-        <img id="h-admissions-9" class="ly hl adm" src="assets/layers/h_admissions_9.png" alt="" style="left:895.0px; top:138.0px; width:78.0px; height:110.0px" />
-        <img id="h-open-0" class="ly hl opn" src="assets/layers/h_open_0.png" alt="" style="left:336.0px; top:280.0px; width:119.0px; height:123.0px" />
-        <img id="h-open-1" class="ly hl opn" src="assets/layers/h_open_1.png" alt="" style="left:459.0px; top:277.0px; width:86.0px; height:121.0px" />
-        <img id="h-open-2" class="ly hl opn" src="assets/layers/h_open_2.png" alt="" style="left:550.0px; top:271.0px; width:74.0px; height:122.0px" />
-        <img id="h-open-3" class="ly hl opn" src="assets/layers/h_open_3.png" alt="" style="left:629.0px; top:266.0px; width:107.0px; height:123.0px" />
-        <img id="tk-head-l" class="ly tk tkl" src="assets/layers/tk_head_l.png" alt="" style="left:59.67px; top:243.33px; width:70.33px; height:115.0px" />
-        <img id="tk-head-r" class="ly tk tkr" src="assets/layers/tk_head_r.png" alt="" style="left:856.67px; top:319.0px; width:78.0px; height:91.0px" />
+        <img data-hf-id="hf-d3b7" id="head-brush" class="ly wipe" src="assets/layers/head_brush.png" alt="" style="left:117.0px; top:100.0px; width:864.0px; height:332.0px">
+        <img data-hf-id="hf-l01h" id="h-admissions-0" class="ly hl adm" src="assets/layers/h_admissions_0.png" alt="" style="left:140.0px; top:186.0px; width:108.0px; height:110.0px">
+        <img data-hf-id="hf-ve6v" id="h-admissions-1" class="ly hl adm" src="assets/layers/h_admissions_1.png" alt="" style="left:240.0px; top:181.0px; width:88.0px; height:108.0px">
+        <img data-hf-id="hf-rsqh" id="h-admissions-2" class="ly hl adm" src="assets/layers/h_admissions_2.png" alt="" style="left:332.0px; top:171.0px; width:117.0px; height:113.0px">
+        <img data-hf-id="hf-vt1d" id="h-admissions-3" class="ly hl adm" src="assets/layers/h_admissions_3.png" alt="" style="left:447.0px; top:168.0px; width:33.0px; height:108.0px">
+        <img data-hf-id="hf-gnd6" id="h-admissions-4" class="ly hl adm" src="assets/layers/h_admissions_4.png" alt="" style="left:485.0px; top:164.0px; width:79.0px; height:109.0px">
+        <img data-hf-id="hf-ax3d" id="h-admissions-5" class="ly hl adm" src="assets/layers/h_admissions_5.png" alt="" style="left:567.0px; top:159.0px; width:79.0px; height:110.0px">
+        <img data-hf-id="hf-8bkh" id="h-admissions-6" class="ly hl adm" src="assets/layers/h_admissions_6.png" alt="" style="left:647.0px; top:156.0px; width:33.0px; height:107.0px">
+        <img data-hf-id="hf-ojh5" id="h-admissions-7" class="ly hl adm" src="assets/layers/h_admissions_7.png" alt="" style="left:683.0px; top:151.0px; width:106.0px; height:110.0px">
+        <img data-hf-id="hf-998p" id="h-admissions-8" class="ly hl adm" src="assets/layers/h_admissions_8.png" alt="" style="left:792.0px; top:143.0px; width:97.0px; height:111.0px">
+        <img data-hf-id="hf-8rvx" id="h-admissions-9" class="ly hl adm" src="assets/layers/h_admissions_9.png" alt="" style="left:895.0px; top:138.0px; width:78.0px; height:110.0px">
+        <div data-hf-id="hf-fzei" id="open-line" class="grp">
+        <img data-hf-id="hf-5dty" id="h-open-0" class="ly hl opn" src="assets/layers/h_open_0.png" alt="" style="left:336.0px; top:280.0px; width:119.0px; height:123.0px">
+        <img data-hf-id="hf-cbfd" id="h-open-1" class="ly hl opn" src="assets/layers/h_open_1.png" alt="" style="left:459.0px; top:277.0px; width:86.0px; height:121.0px">
+        <img data-hf-id="hf-9ucl" id="h-open-2" class="ly hl opn" src="assets/layers/h_open_2.png" alt="" style="left:550.0px; top:271.0px; width:74.0px; height:122.0px">
+        <img data-hf-id="hf-wk70" id="h-open-3" class="ly hl opn" src="assets/layers/h_open_3.png" alt="" style="left:629.0px; top:266.0px; width:107.0px; height:123.0px">
+        </div>
+        <img data-hf-id="hf-w9du" id="tk-head-l" class="ly tk tkl" src="assets/layers/tk_head_l.png" alt="" style="left:59.67px; top:243.33px; width:70.33px; height:115.0px">
+        <img data-hf-id="hf-7iqs" id="tk-head-r" class="ly tk tkr" src="assets/layers/tk_head_r.png" alt="" style="left:856.67px; top:319.0px; width:78.0px; height:91.0px">
+        <!-- everything below the headline moves down by LINE_GAP + HEAD_MARGIN -->
+        <div data-hf-id="hf-j1l2" id="below" class="grp">
         <!-- year ribbon -->
-        <img id="ribbon" class="ly " src="assets/layers/ribbon.png" alt="" style="left:256.33px; top:420.67px; width:566.0px; height:129.0px" />
-        <img id="year" class="ly " src="assets/layers/year.png" alt="" style="left:309.33px; top:447.67px; width:462.0px; height:73.0px" />
-        <img id="tk-year-l" class="ly tk tkl" src="assets/layers/tk_year_l.png" alt="" style="left:178.0px; top:441.67px; width:67.0px; height:103.0px" />
-        <img id="tk-year-r" class="ly tk tkr" src="assets/layers/tk_year_r.png" alt="" style="left:834.0px; top:441.67px; width:64.0px; height:99.0px" />
+        <img data-hf-id="hf-wkc3" id="ribbon" class="ly" src="assets/layers/ribbon.png" alt="" style="left:256.33px; top:420.67px; width:566.0px; height:129.0px">
+        <img data-hf-id="hf-3k5s" id="year" class="ly" src="assets/layers/year.png" alt="" style="left:309.33px; top:447.67px; width:462.0px; height:73.0px">
+        <img data-hf-id="hf-zopr" id="tk-year-l" class="ly tk tkl" src="assets/layers/tk_year_l.png" alt="" style="left:178.0px; top:441.67px; width:67.0px; height:103.0px">
+        <img data-hf-id="hf-bpat" id="tk-year-r" class="ly tk tkr" src="assets/layers/tk_year_r.png" alt="" style="left:834.0px; top:441.67px; width:64.0px; height:99.0px">
         <!-- puzzle: photo masked to the piece, white frame on top -->
-        <div id="puzzle">
-        <div id="pz-tl" class="pz" style="left:56.67px; top:555.0px; width:506.0px; height:481.0px" data-layout-allow-overflow data-layout-allow-overlap>
-          <div class="pzm" style="-webkit-mask-image:url(assets/layers/pz_tl_mask.png); mask-image:url(assets/layers/pz_tl_mask.png)"><img class="pzp" src="assets/layers/pz_tl_photo.png" alt="" /></div>
-          <img class="pzf" src="assets/layers/pz_tl_frame.png" alt="" />
+        <div data-hf-id="hf-4qy5" id="puzzle">
+        <div data-hf-id="hf-irwv" id="pz-tl" class="pz" style="left:56.67px; top:555.0px; width:506.0px; height:481.0px" data-layout-allow-overflow="" data-layout-allow-overlap="">
+          <div data-hf-id="hf-mv94" class="pzm" style="-webkit-mask-image:url(assets/layers/pz_tl_mask.png); mask-image:url(assets/layers/pz_tl_mask.png)"><img data-hf-id="hf-w6q1" class="pzp" src="assets/layers/pz_tl_photo.png" alt=""></div>
+          <img data-hf-id="hf-vxfk" class="pzf" src="assets/layers/pz_tl_frame.png" alt="">
         </div>
-        <div id="pz-tr" class="pz" style="left:413.67px; top:555.0px; width:606.33px; height:560.0px" data-layout-allow-overflow data-layout-allow-overlap>
-          <div class="pzm" style="-webkit-mask-image:url(assets/layers/pz_tr_mask.png); mask-image:url(assets/layers/pz_tr_mask.png)"><img class="pzp" src="assets/layers/pz_tr_photo.png" alt="" /></div>
-          <img class="pzf" src="assets/layers/pz_tr_frame.png" alt="" />
+        <div data-hf-id="hf-kzh7" id="pz-tr" class="pz" style="left:413.67px; top:555.0px; width:606.33px; height:560.0px" data-layout-allow-overflow="" data-layout-allow-overlap="">
+          <div data-hf-id="hf-kwic" class="pzm" style="-webkit-mask-image:url(assets/layers/pz_tr_mask.png); mask-image:url(assets/layers/pz_tr_mask.png)"><img data-hf-id="hf-cvy3" class="pzp" src="assets/layers/pz_tr_photo.png" alt=""></div>
+          <img data-hf-id="hf-hhbi" class="pzf" src="assets/layers/pz_tr_frame.png" alt="">
         </div>
-        <div id="pz-bl" class="pz" style="left:56.67px; top:911.0px; width:589.0px; height:569.0px" data-layout-allow-overflow data-layout-allow-overlap>
-          <div class="pzm" style="-webkit-mask-image:url(assets/layers/pz_bl_mask.png); mask-image:url(assets/layers/pz_bl_mask.png)"><img class="pzp" src="assets/layers/pz_bl_photo.png" alt="" /></div>
-          <img class="pzf" src="assets/layers/pz_bl_frame.png" alt="" />
+        <div data-hf-id="hf-9k49" id="pz-bl" class="pz" style="left:56.67px; top:911.0px; width:589.0px; height:569.0px" data-layout-allow-overflow="" data-layout-allow-overlap="">
+          <div data-hf-id="hf-7p9k" class="pzm" style="-webkit-mask-image:url(assets/layers/pz_bl_mask.png); mask-image:url(assets/layers/pz_bl_mask.png)"><img data-hf-id="hf-boz7" class="pzp" src="assets/layers/pz_bl_photo.png" alt=""></div>
+          <img data-hf-id="hf-a3o6" class="pzf" src="assets/layers/pz_bl_frame.png" alt="">
         </div>
-        <div id="pz-br" class="pz" style="left:510.67px; top:986.0px; width:509.33px; height:494.0px" data-layout-allow-overflow data-layout-allow-overlap>
-          <div class="pzm" style="-webkit-mask-image:url(assets/layers/pz_br_mask.png); mask-image:url(assets/layers/pz_br_mask.png)"><img class="pzp" src="assets/layers/pz_br_photo.png" alt="" /></div>
-          <img class="pzf" src="assets/layers/pz_br_frame.png" alt="" />
+        <div data-hf-id="hf-lw4b" id="pz-br" class="pz" style="left:510.67px; top:986.0px; width:509.33px; height:494.0px" data-layout-allow-overflow="" data-layout-allow-overlap="">
+          <div data-hf-id="hf-a45o" class="pzm" style="-webkit-mask-image:url(assets/layers/pz_br_mask.png); mask-image:url(assets/layers/pz_br_mask.png)"><img data-hf-id="hf-fpn5" class="pzp" src="assets/layers/pz_br_photo.png" alt=""></div>
+          <img data-hf-id="hf-zi9k" class="pzf" src="assets/layers/pz_br_frame.png" alt="">
         </div>
         </div>
         <!-- date -->
-        <img id="date-brush" class="ly wipe" src="assets/layers/date_brush.png" alt="" style="left:123.33px; top:1509.33px; width:831.0px; height:209.0px" />
-        <img id="d-21st" class="ly " src="assets/layers/d_21st.png" alt="" style="left:181.33px; top:1517.33px; width:200.0px; height:152.0px" />
-        <img id="d-november" class="ly " src="assets/layers/d_november.png" alt="" style="left:397.33px; top:1511.33px; width:530.0px; height:158.0px" />
-        <img id="date-line" class="ly wipe" src="assets/layers/date_line.png" alt="" style="left:293.33px; top:1669.33px; width:520.0px; height:47.0px" />
-        <img id="tk-date-l" class="ly tk tkl" src="assets/layers/tk_date_l.png" alt="" style="left:53.33px; top:1574.67px; width:65.0px; height:105.0px" />
-        <img id="tk-date-r" class="ly tk tkr" src="assets/layers/tk_date_r.png" alt="" style="left:966.33px; top:1546.67px; width:63.0px; height:107.0px" />
-        <!-- tagline, one image per word, and the url pill -->
-        <img id="tag-0" class="ly tw" src="assets/layers/tag_0.png" alt="" style="left:146.0px; top:1740.33px; width:123.0px; height:45.0px" />
-        <img id="tag-1" class="ly tw" src="assets/layers/tag_1.png" alt="" style="left:279.0px; top:1739.33px; width:107.0px; height:37.0px" />
-        <img id="tag-2" class="ly tw" src="assets/layers/tag_2.png" alt="" style="left:396.0px; top:1739.33px; width:106.0px; height:37.0px" />
-        <img id="tag-3" class="ly tw" src="assets/layers/tag_3.png" alt="" style="left:515.0px; top:1739.33px; width:103.0px; height:37.0px" />
-        <img id="tag-4" class="ly tw" src="assets/layers/tag_4.png" alt="" style="left:624.0px; top:1739.33px; width:121.0px; height:47.0px" />
-        <img id="tag-5" class="ly tw" src="assets/layers/tag_5.png" alt="" style="left:758.0px; top:1744.33px; width:44.0px; height:32.0px" />
-        <img id="tag-6" class="ly tw" src="assets/layers/tag_6.png" alt="" style="left:811.0px; top:1749.33px; width:117.0px; height:37.0px" />
-        <img id="url" class="ly " src="assets/layers/url.png" alt="" style="left:381.67px; top:1802.33px; width:290.0px; height:55.0px" />
+        <img data-hf-id="hf-d89r" id="date-brush" class="ly wipe" src="assets/layers/date_brush.png" alt="" style="left:123.33px; top:1509.33px; width:831.0px; height:209.0px">
+        <img data-hf-id="hf-fboa" id="d-21st" class="ly" src="assets/layers/d_21st.png" alt="" style="left:181.33px; top:1517.33px; width:200.0px; height:152.0px">
+        <img data-hf-id="hf-nzq9" id="d-november" class="ly" src="assets/layers/d_november.png" alt="" style="left:397.33px; top:1511.33px; width:530.0px; height:158.0px">
+        <img data-hf-id="hf-0q55" id="date-line" class="ly wipe" src="assets/layers/date_line.png" alt="" style="left:293.33px; top:1669.33px; width:520.0px; height:47.0px">
+        <img data-hf-id="hf-gqkl" id="tk-date-l" class="ly tk tkl" src="assets/layers/tk_date_l.png" alt="" style="left:53.33px; top:1574.67px; width:65.0px; height:105.0px">
+        <img data-hf-id="hf-maod" id="tk-date-r" class="ly tk tkr" src="assets/layers/tk_date_r.png" alt="" style="left:966.33px; top:1546.67px; width:63.0px; height:107.0px">
+        <!-- tagline, one image per word, and the url as live text (2026-11-17: no pill, green bold) -->
+        <img data-hf-id="hf-0bev" id="tag-0" class="ly tw" src="assets/layers/tag_0.png" alt="" style="left:146.0px; top:1740.33px; width:123.0px; height:45.0px">
+        <img data-hf-id="hf-6w4x" id="tag-1" class="ly tw" src="assets/layers/tag_1.png" alt="" style="left:279.0px; top:1739.33px; width:107.0px; height:37.0px">
+        <img data-hf-id="hf-hdge" id="tag-2" class="ly tw" src="assets/layers/tag_2.png" alt="" style="left:396.0px; top:1739.33px; width:106.0px; height:37.0px">
+        <img data-hf-id="hf-1nom" id="tag-3" class="ly tw" src="assets/layers/tag_3.png" alt="" style="left:515.0px; top:1739.33px; width:103.0px; height:37.0px">
+        <img data-hf-id="hf-5ujm" id="tag-4" class="ly tw" src="assets/layers/tag_4.png" alt="" style="left:624.0px; top:1739.33px; width:121.0px; height:47.0px">
+        <img data-hf-id="hf-80oy" id="tag-5" class="ly tw" src="assets/layers/tag_5.png" alt="" style="left:758.0px; top:1744.33px; width:44.0px; height:32.0px">
+        <img data-hf-id="hf-doxf" id="tag-6" class="ly tw" src="assets/layers/tag_6.png" alt="" style="left:811.0px; top:1749.33px; width:117.0px; height:37.0px">
+        <div data-hf-id="hf-h40s" id="url" class="ly">greenlawns.org</div>
+        </div>
         <!-- school crest (client file) -->
-        <img id="logo" class="ly" src="assets/greenlawns-crest.png" alt="Greenlawns crest" style="left:46px; top:52px; width:133px; height:132px" />
+        <img data-hf-studio-original-display="" data-hf-studio-original-box-sizing="" data-hf-studio-original-flex-shrink="" data-hf-studio-original-flex-grow="" data-hf-studio-original-flex-basis="" data-hf-studio-original-max-height="" data-hf-studio-original-max-width="" data-hf-studio-original-min-height="" data-hf-studio-original-min-width="" data-hf-studio-original-box-height="132" data-hf-studio-original-box-width="133" data-hf-studio-original-height="132px" data-hf-studio-original-width="133px" data-hf-studio-box-size="true" data-hf-id="hf-m95r" id="logo" class="ly" src="assets/greenlawns-crest.png" alt="Greenlawns crest" style="left: 46px; top: 52px; width: 222px; height: 221px; --hf-studio-width: 222px; --hf-studio-height: 221px; min-width: 0px; min-height: 0px; max-width: none; max-height: none; box-sizing: border-box">
         </div></div>
       </section>
 
       <!-- soundtrack from tools/make_audio.py (reads cues.json) -->
-      <audio id="mix" src="assets/audio.wav" data-start="0" data-duration="12" data-volume="1" data-track-index="1"></audio>
+      <audio data-hf-id="hf-rx5y" id="mix" src="assets/audio.wav" data-start="0" data-duration="12" data-volume="1" data-track-index="1"></audio>
     </div>
 
     <script>
@@ -108,7 +114,9 @@
       const GRID = css.getPropertyValue("--grid").trim(), SHADOW = css.getPropertyValue("--shadow").trim();
 
       // poster placement inside Instagram's safe area (see header comment)
-      const POSTER_SCALE = 0.82, POSTER_Y = 172;
+      const POSTER_SCALE = 0.80, POSTER_Y = 173;
+      // headline spacing (poster px; 2026-11-17 feedback): extra gap between ADMISSIONS and OPEN, and below the headline
+      const LINE_GAP = 20, HEAD_MARGIN = 24;
 
       // faint grid as on the poster: 135 x 121 px cells
       q("#grid").innerHTML = (() => {
@@ -118,8 +126,13 @@
         return `<g stroke="${GRID}" stroke-width="2.5">${s}</g>`;
       })();
 
+gsap.set("#logo", { x: 392.247, y: -201.784 });
       const tl = gsap.timeline({ paused: true });
       gsap.set("#poster", { scale: POSTER_SCALE, y: POSTER_Y, transformOrigin: "540px 0px" });
+      gsap.set("#open-line, #tk-head-r", { y: LINE_GAP });
+      gsap.set("#tk-head-l", { y: LINE_GAP / 2 });
+      gsap.set("#head-brush", { scaleY: (332 + LINE_GAP) / 332, transformOrigin: "50% 0%" });   // brush grows to cover OPEN
+      gsap.set("#below", { y: LINE_GAP + HEAD_MARGIN });
 
       // helpers
       const wipe = (sel, t, dur = 0.4, from = "right") => tl.fromTo(sel,
@@ -168,7 +181,7 @@
       wipe("#date-line", 4.45, 0.4);
       burst("#tk-date-l, #tk-date-r", 4.5);
       tl.fromTo(".tw", { y: 22, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out", stagger: 0.11 }, 5.0);
-      tl.fromTo("#url", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "expo.out" }, 6.05);
+      tl.fromTo("#url", { scale: 0.8, opacity: 0, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, duration: 0.4, ease: "expo.out" }, 6.05);
 
       // ---- 6.4-12 hold: small life everywhere, nothing new to read ----
       const PUSH = { tl: "30% 30%", tr: "62% 26%", bl: "45% 34%", br: "62% 36%" };   // aim at faces, away from shirt crests

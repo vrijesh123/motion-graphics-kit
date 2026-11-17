@@ -33,9 +33,14 @@ L = "\n        ".join
 body = f"""
         <!-- headline: yellow brush + letters (cut from the poster) -->
         {img("head_brush", "wipe")}
-        {L(img(k, "hl " + ("adm" if "admissions" in k else "opn")) for k in letters)}
+        {L(img(k, "hl adm") for k in letters if "admissions" in k)}
+        <div id="open-line" class="grp">
+        {L(img(k, "hl opn") for k in letters if "open" in k)}
+        </div>
         {img("tk_head_l", "tk tkl")}
         {img("tk_head_r", "tk tkr")}
+        <!-- everything below the headline moves down by LINE_GAP + HEAD_MARGIN -->
+        <div id="below" class="grp">
         <!-- year ribbon -->
         {img("ribbon")}
         {img("year")}
@@ -55,9 +60,10 @@ body = f"""
         {img("date_line", "wipe")}
         {img("tk_date_l", "tk tkl")}
         {img("tk_date_r", "tk tkr")}
-        <!-- tagline, one image per word, and the url pill -->
+        <!-- tagline, one image per word, and the url as live text (2026-11-17: no pill, green bold) -->
         {L(img(k, "tw") for k in tags)}
-        {img("url")}
+        <div id="url" class="ly">greenlawns.org</div>
+        </div>
         <!-- school crest (client file) -->
         <img id="logo" class="ly" src="assets/greenlawns-crest.png" alt="Greenlawns crest" style="left:46px; top:52px; width:133px; height:132px" />"""
 

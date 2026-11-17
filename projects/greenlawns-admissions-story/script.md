@@ -11,6 +11,12 @@
   below Instagram's profile bar (top at y≈215) and the url above the reply bar (bottom at y≈1694). Wave and grid stay
   full-frame. **Needs the school's OK**; `POSTER_SCALE = 1, POSTER_Y = 0` restores the original layout.
 - 2026-11-17: v1 rendered: `outputs/greenlawns-admissions-story-v1-12s.mp4`.
+- 2026-11-17 feedback on v1: "good output", plus (1) more line height between ADMISSIONS and OPEN and more space
+  below the headline; (2) url without the green pill, as green bold text. Done: `LINE_GAP = 20`, `HEAD_MARGIN = 24`
+  (poster px) in `build/index.tpl.html`; the yellow brush stretches 6% down to cover OPEN; everything from the ribbon
+  down moves 44 px; the url is live text, Poppins 700, 40 px, `#01300F` (the poster's ink). `POSTER_SCALE` 0.82 -> 0.80
+  so the taller layout still fits the safe area (crest top y≈215, url bottom y≈1695). Timing unchanged.
+- 2026-11-17: v2 rendered: `outputs/greenlawns-admissions-story-v2-12s.mp4`.
 
 ## Format
 1080x1920, 30 fps, 12 s, one scene. Message on screen by ~1.3 s (stories get tapped through); the complete poster
@@ -28,7 +34,7 @@ holds from 6.4 s to 12 s.
 | 3.3 | Complete puzzle | Small settle pulse | chime |
 | 3.85-4.9 | "21st November", underline, ticks | Green brush paints on, "21st" pops, "November" slides in, underline draws | whoosh, pop |
 | 5.0-5.95 | "Every child finds their place to grow." | Word by word | |
-| 6.05 | greenlawns.org pill | Pops in | pop, chime |
+| 6.05 | greenlawns.org (green bold text since v2) | Pops in | pop, chime |
 | 6.4-12.0 | Full poster | Slow push-in inside each photo (aimed at faces, away from the garbled shirt crests), gentle camera push, tick pulses at 7.2 / 9.2 / 11.0, wave breathes, crest sways | music thins |
 
 ## How it is built
